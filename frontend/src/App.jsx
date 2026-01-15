@@ -1,8 +1,20 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 const App = () => {
   return (
-    <h1>Welcome to TechMart</h1>
+    <>
+      {/* Add Header component here */}
+      <Header />
+      <main className="">
+        <Outlet />
+      </main>
+
+      {/* Add Footer component here */}
+      <Footer />
+    </>
   )
 }
 
