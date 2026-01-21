@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+    --color-techmart-color: #6f7f80; 
+    --color-techmart-dark: #4f5d5e; 
+}

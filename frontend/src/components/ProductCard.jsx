@@ -33,7 +33,7 @@ const ProductCard = ({product}) => {
                         ₹{product.price.toLocaleString("en-IN")}
                     </span>
 
-                    <button className="px-2 py-1 md:px-4 md:py-2 bg-teal-700 text-white text-sm md:rounded-sm hover:bg-teal-900 transition">
+                    <button className="px-2 py-1 md:px-4 md:py-2 bg-techmart-color hover:bg-techmart-dark text-white text-sm md:rounded-sm transition">
                         Add to Cart
                     </button>
                 </div>

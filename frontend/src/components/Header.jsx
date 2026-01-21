@@ -8,8 +8,8 @@ const Header = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-teal-800 shadow-md sticky top-0 md:static">
-      <div className="max-w-7xl mx-auto px-6">
+    <nav className="w-full bg-techmart-color shadow-md sticky top-0 md:static">
+      <div className="lg:max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-12 md:h-16">
           
           {/* Left - Logo */}

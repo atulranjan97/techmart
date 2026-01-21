@@ -58,7 +58,7 @@ if (process.argv[2] === '-d') {
 }
 
 // In package.json, we add the following two script
-    // "data:import": "node backend/seeder.js",
-    // "data:destroy": "node backend/seeder.js -d"
+    // "data:import": "node --env-file=.env backend/seeder.js",
+    // "data:destroy": "node --env-file=.env backend/seeder.js -d"
     // now we can execute importData function through command line interface(or terminal) by using command `npm run data:import`
-    // And we can execute destroyData function through command line interface(or terminal) by using command `npm run data:import -d`
+    // And we can execute destroyData function through command line interface(or terminal) by using command `npm run data:destroy -d`

@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-teal-900 text-gray-300">
+    <footer className="bg-techmart-color text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-10">
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm">
+        <div className="border-t border-white mt-10 pt-6 text-center text-sm">
           © {new Date().getFullYear()} TechMart. All rights reserved.
         </div>
       </div>
