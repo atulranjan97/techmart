@@ -1,19 +1,33 @@
-import { useParams } from "react-router-dom"; // we're gonna need to get the id from the url and we can get that with a hook called useParams and that's from react-router-dom
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // we're gonna need to get the id from the url and we can get that with a hook called useParams and that's from react-router-dom
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
+import { addToCart } from "../slices/cartSlice";
 
 const ProductPage = () => {
   const { id: productId } = useParams();
   // we destructure the id and rename it to productId
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [qty, setQty] = useState(1);
+
 
   const {
     data: product,
     isLoading,
     error,
   } = useGetProductDetailsQuery(productId);
+
+  const addToCartHandler = () => {
+    dispatch(addToCart({ ...product, qty }));
+    navigate('/cart');
+  };
 
   return (
     <div className="max-w-7xl mx-auto lg:my-7">
@@ -72,15 +86,16 @@ const ProductPage = () => {
               </p>
 
               {/* Quantity
-                        <div className="flex items-center gap-4 mt-6">
-                            <span className="font-medium">Quantity:</span>
-                            <input
-                            type="number"
-                            min="1"
-                            defaultValue="1"
-                            className="w-20 border rounded-md px-3 py-1"
-                            />
-                        </div> */}
+              <div className="flex items-center gap-4 mt-6">
+                  <span className="font-medium">Quantity:</span>
+                  <input
+                  type="number"
+                  min="1"
+                  max={product.countInStock}
+                  defaultValue="1"
+                  className="w-20 border rounded-md px-3 py-1"
+                  />
+              </div> */}
 
               {/* Status */}
               <div className="mt-6 text-gray-700 flex gap-x-3">
@@ -90,9 +105,19 @@ const ProductPage = () => {
                 </span>
               </div>
 
+              {/* Quantity */}
+              {product.countInStock > 0 && (
+                <div className="flex items-center gap-4 mt-6">
+                  <span className="font-semibold text-gray-700">Quantity:</span>
+                  <select className="w-20 border rounded-md px-3 py-1" name="" value={qty} onChange={(e) => setQty(Number(e.target.value))}>
+                    {[...Array(product.countInStock).keys()].map((x) => <option key={x + 1} value={x + 1}> {x + 1} </option>)}
+                  </select>
+                </div>
+              )}
+
               {/* Actions */}
               <div className="flex gap-4 mt-8">
-                <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800">
+                <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800" onClick={addToCartHandler}>
                   Add to Cart
                 </button>
                 <button
