@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // we're gonna need to get the id from the url and we can get that with a hook called useParams and that's from react-router-dom
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -17,15 +17,20 @@ const ProductPage = () => {
 
   const [qty, setQty] = useState(1);
 
-
   const {
     data: product,
     isLoading,
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
+  const { cartItems } = useSelector((state) => state.cart); // delete
+
+  const addToCartHandler = async () => {
+    const itemExist = cartItems.find((item) => item._id === product._id);
+
+    const currQty = itemExist ? itemExist.qty : 0;
+    dispatch(addToCart({ ...product, qty: currQty + qty }));
+
     navigate('/cart');
   };
 
@@ -85,18 +90,6 @@ const ProductPage = () => {
                 {product.description}
               </p>
 
-              {/* Quantity
-              <div className="flex items-center gap-4 mt-6">
-                  <span className="font-medium">Quantity:</span>
-                  <input
-                  type="number"
-                  min="1"
-                  max={product.countInStock}
-                  defaultValue="1"
-                  className="w-20 border rounded-md px-3 py-1"
-                  />
-              </div> */}
-
               {/* Status */}
               <div className="mt-6 text-gray-700 flex gap-x-3">
                 <span className="font-semibold text-gray-700">Status:</span>
@@ -114,6 +107,18 @@ const ProductPage = () => {
                   </select>
                 </div>
               )}
+
+              {/* Quantity
+              <div className="flex items-center gap-4 mt-6">
+                  <span className="font-medium">Quantity:</span>
+                  <input
+                  type="number"
+                  min="1"
+                  max={product.countInStock}
+                  defaultValue="1"
+                  className="w-20 border rounded-md px-3 py-1"
+                  />
+              </div> */}
 
               {/* Actions */}
               <div className="flex gap-4 mt-8">
