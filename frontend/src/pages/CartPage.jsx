@@ -1,32 +1,31 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { FaTrash } from 'react-icons/fa'
-import Message from '../components/Message'
-import { addToCart, removeFromCart } from '../slices/cartSlice'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { FaTrash } from "react-icons/fa";
+import Message from "../components/Message";
+import { addToCart, removeFromCart } from "../slices/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { cartItems, itemsPrice } = useSelector((state) => state.cart)
-  const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0)
+  const { cartItems, itemsPrice } = useSelector((state) => state.cart);
+  const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   const addToCartHandler = async (product, qty) => {
-    dispatch(addToCart({...product, qty}));
-  }
+    dispatch(addToCart({ ...product, qty }));
+  };
 
   const removeFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
-  }
+  };
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=/shipping');
-  }
+    navigate("/login?redirect=/shipping");
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen pb-24 md:pb-0">
-      
       {/* Header */}
       <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10">
         <h1 className="text-xl font-semibold text-techmart-color">
@@ -35,7 +34,6 @@ const CartPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 grid md:grid-cols-[1fr_320px] gap-4 mt-4">
-        
         {/* Cart Items */}
         <div className="space-y-3">
           {cartItems.length === 0 ? (
@@ -65,7 +63,9 @@ const CartPage = () => {
                     <select
                       className="border rounded-md px-2 py-1 text-sm"
                       value={item.qty}
-                      onChange={(e) => addToCartHandler(item, Number(e.target.value))}
+                      onChange={(e) =>
+                        addToCartHandler(item, Number(e.target.value))
+                      }
                     >
                       {[...Array(item.countInStock).keys()].map((x) => (
                         <option key={x + 1} value={x + 1}>
@@ -75,7 +75,12 @@ const CartPage = () => {
                     </select>
 
                     {/* Delete */}
-                    <button className="text-gray-500 hover:text-techmart-dark" onClick={() => {removeFromCartHandler(item._id)}}>
+                    <button
+                      className="text-gray-500 hover:text-techmart-dark"
+                      onClick={() => {
+                        removeFromCartHandler(item._id);
+                      }}
+                    >
                       <FaTrash />
                     </button>
                   </div>
@@ -87,16 +92,21 @@ const CartPage = () => {
 
         {/* Desktop Summary */}
         <div className="hidden md:block bg-white rounded-lg p-4 shadow-sm h-fit">
-          <h2 className="text-lg font-semibold mb-3">Subtotal ({totalQty}) items:</h2>
+          <h2 className="text-lg font-semibold mb-3">
+            Subtotal ({totalQty}) items:
+          </h2>
 
           <div className="flex justify-between text-sm mb-1">
             <span>Total Price</span>
-            <span>₹ {itemsPrice.toLocaleString('en-IN')}</span>
+            <span>₹ {itemsPrice.toLocaleString("en-IN")}</span>
           </div>
 
           <div className="border-t my-3"></div>
 
-          <button className="w-full bg-techmart-dark text-white py-2 rounded-md" onClick={checkoutHandler}>
+          <button
+            className="w-full bg-techmart-dark text-white py-2 rounded-md"
+            onClick={checkoutHandler}
+          >
             Checkout
           </button>
         </div>
@@ -107,16 +117,19 @@ const CartPage = () => {
         <div>
           <p className="text-xs text-gray-500">Total ({totalQty})</p>
           <p className="font-semibold">
-            ₹ {itemsPrice.toLocaleString('en-IN')}
+            ₹ {itemsPrice.toLocaleString("en-IN")}
           </p>
         </div>
 
-        <button className="bg-techmart-dark text-white px-6 py-2 rounded-md" onClick={checkoutHandler}>
+        <button
+          className="bg-techmart-dark text-white px-6 py-2 rounded-md"
+          onClick={checkoutHandler}
+        >
           Checkout
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;

@@ -71,6 +71,10 @@ const logoutUser = asyncHandler(async (req, res) => {
         httpOnly: true,
         expires: new Date(0),
     });
+    // Sets the cookie value to empty
+    // Sets its expiration to a date in the past
+    // Browser immediately removes it
+    // httpOnly means JS still can’t touch it (as intended)
 
     res.status(200).json({ message: 'Logged out successfully'});
 })

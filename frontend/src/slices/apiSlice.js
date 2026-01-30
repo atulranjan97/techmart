@@ -4,9 +4,13 @@ import { BASE_URL } from "../constants";
 const baseQuery = fetchBaseQuery({ baseUrl: BASE_URL });
 
 export const apiSlice = createApi({
+  // reducerPath: "api",    // optional - Redux Toolkit automatically sets it to "api". RTK Query defaults `reducerPath to "api"`
+
   baseQuery, // baseQuery: baseQuery,
+
   tagTypes: ["Product", "Order", "User"],
   // tagTypes are used to define the type of data the we'll be fetching from our API, we are going to keep those singular
+
   endpoints: (builder) => ({}),
   // we don't have to manually fetch our data like we don't have to do our try-catch with a fetchApi inside of it and error handling and all that, we can do that all through this builder
 });
@@ -20,3 +24,4 @@ export const apiSlice = createApi({
 // `fetchBaseQuery` is the function that will allow us to make request to our backend API
 
 // next we'll create productApiSlice and start to fetch our data through redux rather than just through fetchApi inside of a useEffect
+

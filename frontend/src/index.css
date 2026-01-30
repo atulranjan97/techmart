@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-    --color-techmart-color: #6f7f80; 
-    --color-techmart-dark: #4f5d5e; 
+    /* --color-techmart-color: #6f7f80;  */
+    /* --color-techmart-dark: #4f5d5e;  */
+
+    --color-techmart-color: #3776a1; 
+    --color-techmart-dark: #1B609D; 
+    --color-techmart-darker: #074276; 
+
 }
