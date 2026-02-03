@@ -28,7 +28,7 @@ const NavDropdown = ({ title, items }) => {
 
       {/* Menu */}
       {open && (
-        <div className="absolute mt-9 border border-gray-300 text-gray-800 w-40 rounded-sm bg-white shadow-lg">
+        <div className="absolute right-0 mt-9 w-40 max-w-[90vw] border border-gray-300 rounded-sm bg-white shadow-lg">
           {items.map((item, index) =>
             item.link ? (
               <Link

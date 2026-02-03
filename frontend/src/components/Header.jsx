@@ -17,8 +17,8 @@ import { logout } from "../slices/authSlice";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { cartItems } = useSelector((state) => state.cart );
-  const { userInfo } = useSelector((state) => state.auth );
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const userInfo = useSelector((state) => state.auth.userInfo);
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,13 +36,13 @@ const Header = () => {
   }
 
   return (
-    <nav className="w-full bg-techmart-color shadow-md sticky top-0 md:static">
+    <nav className="w-full bg-techmart-color shadow-md sticky top-0 lg:static">
       <div className="lg:max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-12 md:h-16">
           
           {/* Hamburger */}
           <button
-            className="md:hidden text-white"
+            className="lg:hidden text-white"
             onClick={() => setOpen(!open)}
           >
             <GiHamburgerMenu />
@@ -54,11 +54,11 @@ const Header = () => {
           </div>
 
           {/* Middle - Links (Desktop) */}
-          <div className="hidden md:flex space-x-6 text-white">
-            <Link to={"/"} className="hover:text-black">Home</Link>
-            <Link to={"/products"} className="hover:text-black">Products</Link>
-            <Link to={"/deals"} className="hover:text-black">Deals</Link>
-            <Link to={"/contact"} className="hover:text-black">Contact</Link>
+          <div className="hidden lg:flex space-x-8 text-white">
+            <Link to={"/"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Home</Link>
+            <Link to={"/products"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
+            <Link to={"/deals"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Deals</Link>
+            <Link to={"/contact"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
           </div>
 
           {/* Right - Auth (Desktop) */}
@@ -99,15 +99,15 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden px-6 pb-4 space-y-3 text-white">
-          <Link to={"/"} className="block">Home</Link>
-          <Link to={"/products"} className="block">Products</Link>
-          <Link to={"/deals"} className="block">Deals</Link>
-          <Link to={"/contact"} className="block">Contact</Link>
+        <div className="lg:hidden px-6 pb-4 space-y-3 text-white">
+          <Link to={"/"} className="block" onClick={() => setOpen(false)}>Home</Link>
+          <Link to={"/products"} className="block" onClick={() => setOpen(false)}>Products</Link>
+          <Link to={"/deals"} className="block" onClick={() => setOpen(false)}>Deals</Link>
+          <Link to={"/contact"} className="block" onClick={() => setOpen(false)}>Contact</Link>
 
           <hr />
 
-          <Link to={"/login"} className="block font-semibold">Sign In</Link>
+          <Link to={"/login"} className="block font-semibold" onClick={() => setOpen(false)}>Sign In</Link>
         </div>
       )}
     </nav>

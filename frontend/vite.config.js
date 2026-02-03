@@ -7,11 +7,12 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 3000,
+    host: true,   // this will expose our localhost so that we can access it from mobile device as well
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true
-      }
+      },
     }
   },
 })

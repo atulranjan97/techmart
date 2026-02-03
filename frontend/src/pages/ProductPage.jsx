@@ -1,12 +1,17 @@
+// Core Modules
 import { useState } from "react";
+// External Modules
 import { useParams, useNavigate } from "react-router-dom"; // we're gonna need to get the id from the url and we can get that with a hook called useParams and that's from react-router-dom
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+// Custom Modules
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import { addToCart } from "../slices/cartSlice";
+
 
 const ProductPage = () => {
   const { id: productId } = useParams();
@@ -23,24 +28,33 @@ const ProductPage = () => {
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const { cartItems } = useSelector((state) => state.cart); // delete
+  const cartItems = useSelector((state) => state.cart.cartItems); 
 
   const addToCartHandler = async () => {
     const itemExist = cartItems.find((item) => item._id === product._id);
 
     const currQty = itemExist ? itemExist.qty : 0;
-    dispatch(addToCart({ ...product, qty: currQty + qty }));
+    const qtyToAdd = currQty + qty;
 
-    navigate('/cart');
+    if (qtyToAdd <= product.countInStock) {
+      dispatch(addToCart({ ...product, qty: qtyToAdd}));
+      navigate('/cart');
+    } else {
+      toast.error('You’ve reached the limit”', {
+        position: 'top-center',
+        autoClose: 1000,
+        hideProgressBar: true,
+      })
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto lg:my-7">
+    <div className="max-w-7xl mx-auto lg:py-7 px-2 bg-white">
       {" "}
       {/* px-6 py-7 */}
       <Link
         to="/"
-        className="mb-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-black transition"
+        className="mb-4 hidden lg:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-400 rounded-lg bg-white hover:text-black transition"
       >
         Go Back
       </Link>
@@ -52,18 +66,19 @@ const ProductPage = () => {
         <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 mb-8 lg:py-4">
+
             {/* Left - Image */}
-            <div className="bg-gray-100 rounded-xl p-6 flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <img
                 src={product.image}
                 alt="Product"
-                className="object-contain h-96"
+                className="object-contain h-96 border border-slate-300"
               />
             </div>
 
             {/* Right - Details */}
-            <div>
+            <div className="">
               {/* Name */}
               <h1 className="text-2xl font-bold text-gray-900">
                 {product.name}
@@ -122,7 +137,7 @@ const ProductPage = () => {
 
               {/* Actions */}
               <div className="flex gap-4 mt-8">
-                <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800" onClick={addToCartHandler}>
+                <button className="px-6 py-3 bg-techmart-dark text-white rounded-lg cursor-pointer hover:bg-techmart-darker" onClick={addToCartHandler}>
                   Add to Cart
                 </button>
                 <button

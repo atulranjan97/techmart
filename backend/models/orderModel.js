@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-// import products from "../data/products";
 
 const orderSchema = mongoose.Schema({
     user: {
@@ -10,10 +9,10 @@ const orderSchema = mongoose.Schema({
     orderItems: [
         {
             name: { type: String, required: true },
-            quantity: { type: Number, required: true },
+            qty: { type: Number, required: true },
             image: { type: String, required: true },
             price: { type: Number, required: true },
-            products: {
+            product: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
                 ref: "Product",
@@ -29,7 +28,7 @@ const orderSchema = mongoose.Schema({
         postalCode: { type: String, required: true },
         country: { type: String, required: true },
     },
-    paymentMethods: {
+    paymentMethod: {
         type: String,
         required: true,
     },
@@ -79,6 +78,6 @@ const orderSchema = mongoose.Schema({
     timestamps: true,
 });
 
-const Order = mongoose.model("Model", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;

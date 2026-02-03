@@ -1,9 +1,14 @@
+// Core Modules
 import React from "react";
+// External Modules
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
+// Custom Modules
 import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../slices/cartSlice";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -21,47 +26,52 @@ const CartPage = () => {
   };
 
   const checkoutHandler = () => {
-    navigate("/login?redirect=/shipping");
+    if (cartItems.length) {
+      navigate("/login?redirect=/shipping");
+    } else {
+      toast.error('Your cart is empty. Add items to continue')
+    }
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-24 md:pb-0">
+    <div className="max-w-7xl min-h-screen pb-25 lg:pb-0 mx-auto">
       {/* Header */}
-      <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-techmart-color">
+      <div className="mx-auto px-4 py-3">
+        <h1 className="text-xl lg:text-2xl font-bold text-techmart-color">
           Shopping Cart
         </h1>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 grid md:grid-cols-[1fr_320px] gap-4 mt-4">
+      <div className="px-1 grid lg:grid-cols-[1fr_320px] gap-4 lg:mx-5">
         {/* Cart Items */}
         <div className="space-y-3">
           {cartItems.length === 0 ? (
             <Message>Your cart is empty</Message>
           ) : (
             cartItems.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-lg p-3 flex gap-3 shadow-sm"
-              >
+              <div key={item._id} className="bg-gray-50 p-2 flex gap-3">
                 {/* Image */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-24 h-24 object-contain"
-                />
+                <Link to={`/products/${item._id}`}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-24 h-24 object-contain"
+                  />
+                </Link>
 
                 {/* Content */}
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
-                    <p className="text-sm line-clamp-2">{item.name}</p>
-                    <p className="font-semibold mt-1">₹ {item.price}</p>
+                    <Link to={`/products/${item._id}`}>
+                      <p className="text-sm line-clamp-2">{item.name}</p>
+                    </Link>
+                    <p className="font-semibold mt-1">₹ {item.price.toLocaleString("en-IN")}</p>
                   </div>
 
                   <div className="flex items-center justify-between mt-3">
                     {/* Qty */}
                     <select
-                      className="border rounded-md px-2 py-1 text-sm"
+                      className="border border-blue-500 rounded-md px-2 py-1 text-sm"
                       value={item.qty}
                       onChange={(e) =>
                         addToCartHandler(item, Number(e.target.value))
@@ -91,20 +101,21 @@ const CartPage = () => {
         </div>
 
         {/* Desktop Summary */}
-        <div className="hidden md:block bg-white rounded-lg p-4 shadow-sm h-fit">
+        <div className="hidden lg:block bg-white p-4 shadow-sm h-fit">
           <h2 className="text-lg font-semibold mb-3">
             Subtotal ({totalQty}) items:
           </h2>
 
           <div className="flex justify-between text-sm mb-1">
             <span>Total Price</span>
-            <span>₹ {itemsPrice.toLocaleString("en-IN")}</span>
+            <span>₹ {Number(itemsPrice).toLocaleString("en-IN")}</span>
           </div>
 
           <div className="border-t my-3"></div>
 
           <button
-            className="w-full bg-techmart-dark text-white py-2 rounded-md"
+            disabled={!cartItems.length}
+            className="w-full bg-techmart-dark text-white py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={checkoutHandler}
           >
             Checkout
@@ -113,16 +124,17 @@ const CartPage = () => {
       </div>
 
       {/* Mobile Sticky Checkout */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-300 px-4 py-3 flex items-center justify-between">
         <div>
           <p className="text-xs text-gray-500">Total ({totalQty})</p>
           <p className="font-semibold">
-            ₹ {itemsPrice.toLocaleString("en-IN")}
+            ₹ {Number(itemsPrice).toLocaleString("en-IN")}
           </p>
         </div>
 
         <button
-          className="bg-techmart-dark text-white px-6 py-2 rounded-md"
+          disabled={!cartItems.length}
+          className="bg-techmart-dark text-white px-6 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={checkoutHandler}
         >
           Checkout

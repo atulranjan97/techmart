@@ -32,9 +32,9 @@ const RegisterPage = () => {
   const sp = new URLSearchParams(search);   // sp for search params
   const redirect = sp.get('redirect') || '/';
 
-  console.log(search)
-  console.log(sp)
-  console.log(redirect)
+  // console.log(search)
+  // console.log(sp)
+  // console.log(redirect)
 
   useEffect(() => {
     // if there is userInfo in localStorage then navigate to whatever that redirect is
@@ -64,7 +64,7 @@ const RegisterPage = () => {
 
   return (
       <div className="flex max-w-7xl p-6 mx-auto">
-        <div className="w-full max-w-md bg-white p-8 mx-auto rounded-lg shadow border">
+        <div className="w-full max-w-md bg-white p-8 mx-auto border border-slate-300">
 
           <h2 className="text-2xl font-semibold mb-2">Welcome</h2>
           <p className="text-gray-600 mb-6">Sign Up</p>

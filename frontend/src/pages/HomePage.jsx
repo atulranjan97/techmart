@@ -17,7 +17,7 @@ const HomePage = () => {
           <h1 className="font-bold text-xl md:text-2xl my-1 text-gray-500 text-center lg:text-left">
             Latest Products
           </h1>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 w-fit mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 w-fit mx-auto">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
