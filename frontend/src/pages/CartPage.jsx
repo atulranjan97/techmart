@@ -4,17 +4,17 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // Custom Modules
 import Message from "../components/Message";
-import { addToCart, removeFromCart } from "../slices/cartSlice";
+import { addToCart, clearBuyNowItem, removeFromCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { cartItems, itemsPrice } = useSelector((state) => state.cart);
+  const { cartItems, shippingAddress, itemsPrice } = useSelector((state) => state.cart);
   const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   const addToCartHandler = async (product, qty) => {
@@ -27,7 +27,13 @@ const CartPage = () => {
 
   const checkoutHandler = () => {
     if (cartItems.length) {
-      navigate("/login?redirect=/shipping");
+      const { address, city, postalCode, country} = shippingAddress;
+      dispatch(clearBuyNowItem());
+      if (address && city && postalCode && country) {
+        navigate("/placeorder");
+      } else {
+        navigate("/login?redirect=/shipping");
+      }
     } else {
       toast.error('Your cart is empty. Add items to continue')
     }
@@ -115,7 +121,7 @@ const CartPage = () => {
 
           <button
             disabled={!cartItems.length}
-            className="w-full bg-techmart-dark text-white py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`w-full bg-techmart-dark text-white py-2 rounded-md ${(!cartItems.length) ? "disabled:opacity-50 disabled:cursor-not-allowed" : "cursor-pointer"}`}
             onClick={checkoutHandler}
           >
             Checkout

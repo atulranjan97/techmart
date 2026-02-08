@@ -10,8 +10,7 @@ import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
-import { addToCart } from "../slices/cartSlice";
-
+import { addBuyNowItem, addToCart } from "../slices/cartSlice";
 
 const ProductPage = () => {
   const { id: productId } = useParams();
@@ -28,7 +27,13 @@ const ProductPage = () => {
     error,
   } = useGetProductDetailsQuery(productId);
 
-  const cartItems = useSelector((state) => state.cart.cartItems); 
+  // const cart = useSelector((state) => state.cart);
+  // const { cartItems, shippingAddress } = cart;
+
+  const { cartItems, shippingAddress } = useSelector((state) => state.cart);
+
+  // const cartItems = useSelector(state => state.cart.cartItems);
+  // const shippingAddress = useSelector(state => state.cart.shippingAddress);
 
   const addToCartHandler = async () => {
     const itemExist = cartItems.find((item) => item._id === product._id);
@@ -37,14 +42,38 @@ const ProductPage = () => {
     const qtyToAdd = currQty + qty;
 
     if (qtyToAdd <= product.countInStock) {
-      dispatch(addToCart({ ...product, qty: qtyToAdd}));
-      navigate('/cart');
+      dispatch(addToCart({ ...product, qty: qtyToAdd }));
+      navigate("/cart");
     } else {
-      toast.error('You’ve reached the limit”', {
-        position: 'top-center',
+      toast.error("You’ve reached the limit”", {
+        position: "top-center",
         autoClose: 1000,
         hideProgressBar: true,
-      })
+      });
+    }
+  };
+
+  const checkoutHandler = async () => {
+    if (qty <= product.countInStock) {
+      // const itemsPrice = product.price * qty;
+      // const shippingPrice = itemsPrice > 499 ? 0 : 50;
+      // const taxPrice = Number((0.18 * itemsPrice).toFixed(2));
+      // const totalPrice = itemsPrice + shippingPrice + taxPrice;
+
+      dispatch(addBuyNowItem({ ...product, qty }));
+
+      const { address, city, postalCode, country } = shippingAddress;
+      if (address && city && postalCode && country) {
+        navigate("/placeorder?mode=buynow");
+      } else {
+        navigate("/shipping?mode=buynow");
+      }
+    } else {
+      toast.error("You’ve reached the limit”", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+      });
     }
   };
 
@@ -58,16 +87,15 @@ const ProductPage = () => {
       >
         Go Back
       </Link>
-      
-
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error?.data?.message || error.error}</Message>
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
       ) : (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 mb-8 lg:py-4">
-
             {/* Left - Image */}
             <div className="flex items-center justify-center">
               <img
@@ -117,8 +145,18 @@ const ProductPage = () => {
               {product.countInStock > 0 && (
                 <div className="flex items-center gap-4 mt-6">
                   <span className="font-semibold text-gray-700">Quantity:</span>
-                  <select className="w-20 border rounded-md px-3 py-1" name="" value={qty} onChange={(e) => setQty(Number(e.target.value))}>
-                    {[...Array(product.countInStock).keys()].map((x) => <option key={x + 1} value={x + 1}> {x + 1} </option>)}
+                  <select
+                    className="w-20 border rounded-md px-3 py-1"
+                    name=""
+                    value={qty}
+                    onChange={(e) => setQty(Number(e.target.value))}
+                  >
+                    {[...Array(product.countInStock).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {" "}
+                        {x + 1}{" "}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
@@ -137,12 +175,16 @@ const ProductPage = () => {
 
               {/* Actions */}
               <div className="flex gap-4 mt-8">
-                <button className="px-6 py-3 bg-techmart-dark text-white rounded-lg cursor-pointer hover:bg-techmart-darker" onClick={addToCartHandler}>
+                <button
+                  className="px-6 py-3 bg-techmart-dark text-white rounded-lg cursor-pointer hover:bg-techmart-darker"
+                  onClick={addToCartHandler}
+                >
                   Add to Cart
                 </button>
                 <button
                   disabled={product.countInStock === 0}
-                  className={`px-6 py-3 border rounded-lg hover:bg-gray-100 ${product.countInStock === 0 && "opacity-50 cursor-not-allowed"}`}
+                  className={`px-6 py-3 border rounded-lg hover:bg-gray-100 ${product.countInStock === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  onClick={checkoutHandler}
                 >
                   Buy Now
                 </button>

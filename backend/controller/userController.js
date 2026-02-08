@@ -108,6 +108,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
+        console.log('from updateUserProfileController: ', req.body);
         // we only wanna update the field we send it in the body, so I wanna be able to send just the name and have just the name update, I don't have to send every field
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;

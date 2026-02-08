@@ -29,8 +29,11 @@ app.use('/api/products', productRoutes);
 // so anytime we hit a http request to url prefixes with /api/products, it's gonna go to the file `productRoutes` to handle the request
 
 app.use('/api/users', userRoutes);
-
 app.use('/api/orders', orderRoutes);
+
+app.use('/api/config/paypal', (req, res) => 
+    res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+)
 
 app.use(notFound);
 app.use(errorHandler);

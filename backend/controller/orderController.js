@@ -24,9 +24,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
         const order = new Order({
             orderItems: orderItems.map((item) => ({
                 ...item,
-                product: item._id,
-                _id: undefined
-                // set _id to undefined because we don't need that in order document, we can just have product, which will be the id, there's no _id field in order schema, so we're setting that to undefined
+                product: item._id,  // stores reference to the original product inside product collection
+                _id: undefined      // This removes the existing _id from each item before saving it as part of the order.
+                // Each MongoDB document automatically gets a unique _id. By setting _id to undefined, Mongoose ignores the old value and generates a new one.
             })),
             user: req.user._id,
             shippingAddress,
@@ -54,10 +54,13 @@ const getMyOrders = asyncHandler(async (req, res) => {
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
-// @access  Private/Admin
+// @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id).populate('user', 'name email')
-    // so this is gonna find the order by id(everything that is in the order collection for that particular order) and than it's also gonna populate the user's name and email from user collection
+    const order = await Order.findById(req.params.id).populate('user', 'name email');
+    // Find an order by its ID and populate the 'user' field.
+    // Instead of returning just the user ObjectId, populate() 
+    // fetches the user's name and email from the User collection.
+    // This keeps the response secure (no sensitive fields) and more useful.
 
     if (order) {
         res.status(200).json(order)
@@ -72,7 +75,31 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-    res.send('update order to paid');
+    console.log('updateOrderToPaid method executing');
+
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+
+        order.paymentResult = {
+            id: req.body.id,
+            status: req.body.status,
+            update_time: req.body.update_time,
+            email_address: req.body.email_address
+        };
+        // this stuff comes from paypal once the payment is done
+
+        const updatedOrder = await order.save();
+
+        res.status(200).json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+
+
 })
 
 

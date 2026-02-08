@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 // External Module
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 // Custom Module
 import { saveShippingAddress } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingPage = () => {
-  const {cartItems, shippingAddress} = useSelector((state) => state.cart);
+  const {cartItems, buyNowItem, shippingAddress} = useSelector((state) => state.cart);
 
   const [address, setAddress] = useState(shippingAddress?.address || "");
   const [city, setCity] = useState(shippingAddress?.city || "");
@@ -20,21 +20,26 @@ const ShippingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get("mode");
+
   useEffect(() => {
-    if (!cartItems.length) {
+    if (mode !== "buynow" && !cartItems.length) {
       navigate('/cart');
-    }
-  }, [cartItems.length, navigate])
+    } 
+  }, [cartItems.length, mode, navigate])
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    navigate("/payment");
+    navigate(`/payment?mode=${mode}`);
   };
 
   return (
     <div className="flex flex-col gap-y-4 max-w-7xl p-6 mx-auto">
-      <CheckoutSteps step1 step2 />
+      <div className="w-full mb-3 mx-auto">
+        <CheckoutSteps step1 step2 />
+      </div>
       {/* is as same as <CheckoutSteps step1={true} step2={true} /> */}
 
       <div className="w-full max-w-md bg-white p-8 mx-auto border border-slate-300">
@@ -112,7 +117,7 @@ const ShippingPage = () => {
 
           <button
             type="submit"
-            className="w-fit bg-techmart-color text-white p-2 rounded-md hover:bg-techmart-dark transition mt-3"
+            className="w-fit bg-techmart-color text-white p-2 rounded-md hover:bg-techmart-dark cursor-pointer mt-3"
           >
             Continue
           </button>
