@@ -1,4 +1,4 @@
-import { PRODUCTS_URL } from "../constants";
+import { PRODUCTS_URL } from "../constants";    // /api/products
 import { apiSlice } from "./apiSlice";
 
 export const productApiSlice = apiSlice.injectEndpoints({
@@ -15,7 +15,14 @@ export const productApiSlice = apiSlice.injectEndpoints({
                 url: `${PRODUCTS_URL}/${productId}`, 
            }),
            keepUnusedDataFor: 5,
-        })
+        }),
+        prepareBuyNowProduct: builder.mutation({
+            query: ({productId, qty}) => ({
+                url: `${PRODUCTS_URL}/checkout`,   // /api/products/checkout
+                method: 'POST',
+                body: {productId, qty},
+            })
+        }) 
     }),
     // any endpoint that we wanna hit that have to do with products will go in here and we can use this builder object which has methods like query, so we can make a query
 });
@@ -23,7 +30,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
 // Export the auto-generated hooks
 // RTK Query auto-generates hooks based on the endpoint names
-export const { useGetProductsQuery, useGetProductDetailsQuery } = productApiSlice;
+export const { useGetProductsQuery, useGetProductDetailsQuery, usePrepareBuyNowProductMutation } = productApiSlice;
 
 
 

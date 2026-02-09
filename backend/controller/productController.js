@@ -45,4 +45,51 @@ const getProductById = asyncHandler(async (req, res) => {
 // })
 
 
-export {getProducts, getProductById};
+// @desc    Fetch a product and calculate the prices 
+// @route   POST /api/products/checkout
+// @access  Public
+const prepareCheckout = asyncHandler(async (req, res) => {
+    console.log("prepare checkout controller method running");
+    const {productId, qty} = req.body;
+
+    if (!productId || !qty) {
+        res.status(404);
+        throw new Error('ProductId and qty required');
+    }
+
+    if (isNaN(qty) || qty < 1) {
+        res.status(400);
+        throw new Error('Invalid quantitiy');
+    }
+
+    const product = await Product.findById(productId).lean();
+
+    if (!product) {
+        res.status(404);
+        throw new Error('Resourse not found');
+    }
+
+    if (qty > product.countInStock) {
+        res.status(400);
+        throw new Error('Requested quantity exceeds available stock');
+    }
+    
+    // Price calculations
+    const itemsPrice = Number((product.price * Number(qty)).toFixed(2))
+    const shippingPrice = Number((itemsPrice < 499 ? 50 : 0).toFixed(2)); 
+    const taxPrice = Number((0.18 * itemsPrice).toFixed(2));
+    const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2));
+
+    const checkoutSummary = {
+        product: [{...product, qty}],
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice
+    }
+
+    res.status(200).json(checkoutSummary);
+})
+
+
+export {getProducts, getProductById, prepareCheckout};

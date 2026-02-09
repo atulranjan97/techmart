@@ -8,7 +8,7 @@ import { saveShippingAddress } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingPage = () => {
-  const {cartItems, buyNowItem, shippingAddress} = useSelector((state) => state.cart);
+  const {cartItems, shippingAddress} = useSelector((state) => state.cart);
 
   const [address, setAddress] = useState(shippingAddress?.address || "");
   const [city, setCity] = useState(shippingAddress?.city || "");
@@ -21,18 +21,31 @@ const ShippingPage = () => {
   const dispatch = useDispatch();
 
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get("mode");
+  const id = searchParams.get("id");
+  const qty = searchParams.get("qty");
+  console.log(id, qty)
 
   useEffect(() => {
-    if (mode !== "buynow" && !cartItems.length) {
-      navigate('/cart');
-    } 
-  }, [cartItems.length, mode, navigate])
+    // if (!cartItems.length) {
+    //   navigate('/cart');
+    // } 
+    if (!id && !qty) {
+      if (!cartItems.length) {
+        navigate('/cart')
+      }
+    }
+  }, [cartItems.length, navigate])
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    navigate(`/payment?mode=${mode}`);
+
+    if (id && qty) {
+      navigate(`/payment?id=${id}&qty=${qty}`);
+    } else {
+      navigate(`/payment`);
+    }    
+
   };
 
   return (

@@ -1,8 +1,8 @@
 const Loader = () => {
   return (
-    <div className="w-fit mx-auto">
+    <div className="w-fit mx-auto flex items-center">
         <svg
-        className="size-20 lg:size-30 animate-spin text-techmart-color"
+        className="size-10 lg:size-20 animate-spin text-techmart-color"
         viewBox="0 0 24 24"
         >
             <circle

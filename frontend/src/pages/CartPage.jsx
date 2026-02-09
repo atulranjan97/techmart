@@ -7,7 +7,7 @@ import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 // Custom Modules
 import Message from "../components/Message";
-import { addToCart, clearBuyNowItem, removeFromCart } from "../slices/cartSlice";
+import { addToCart, removeFromCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 
 const CartPage = () => {
@@ -28,7 +28,6 @@ const CartPage = () => {
   const checkoutHandler = () => {
     if (cartItems.length) {
       const { address, city, postalCode, country} = shippingAddress;
-      dispatch(clearBuyNowItem());
       if (address && city && postalCode && country) {
         navigate("/placeorder");
       } else {

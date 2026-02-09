@@ -31,20 +31,5 @@ const updateCart = (state) => {
     return state;
 }
 
-const updateBuyNow = (state) => {
-    const item = state.buyNowItem.item[0];
-    const itemsPrice = item.price * item.qty;
 
-    state.buyNowItem.itemsPrice = itemsPrice;
-    state.buyNowItem.shippingPrice = itemsPrice > 499 ? 0 : 50;
-    state.buyNowItem.taxPrice = Number((0.18 * itemsPrice).toFixed(2));
-    state.buyNowItem.totalPrice = (
-        state.buyNowItem.itemsPrice +
-        state.buyNowItem.shippingPrice +
-        state.buyNowItem.taxPrice 
-    );
-
-    return state;
-}
-
-export {updateCart, updateBuyNow};
+export { updateCart };

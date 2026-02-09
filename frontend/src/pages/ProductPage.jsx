@@ -10,7 +10,7 @@ import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
-import { addBuyNowItem, addToCart } from "../slices/cartSlice";
+import { addToCart } from "../slices/cartSlice";
 
 const ProductPage = () => {
   const { id: productId } = useParams();
@@ -54,27 +54,7 @@ const ProductPage = () => {
   };
 
   const checkoutHandler = async () => {
-    if (qty <= product.countInStock) {
-      // const itemsPrice = product.price * qty;
-      // const shippingPrice = itemsPrice > 499 ? 0 : 50;
-      // const taxPrice = Number((0.18 * itemsPrice).toFixed(2));
-      // const totalPrice = itemsPrice + shippingPrice + taxPrice;
-
-      dispatch(addBuyNowItem({ ...product, qty }));
-
-      const { address, city, postalCode, country } = shippingAddress;
-      if (address && city && postalCode && country) {
-        navigate("/placeorder?mode=buynow");
-      } else {
-        navigate("/shipping?mode=buynow");
-      }
-    } else {
-      toast.error("You’ve reached the limit”", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: true,
-      });
-    }
+    navigate(`/placeorder?id=${product._id}&qty=${qty}`)
   };
 
   return (

@@ -12,7 +12,9 @@ const PaymentPage = () => {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get("mode");
+  const id = searchParams.get("id");
+  const qty = searchParams.get("qty");
+  console.log(id, qty)
 
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
@@ -28,7 +30,12 @@ const PaymentPage = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    navigate(`/placeorder?mode=${mode}`);
+    
+    if (id && qty) {
+      navigate(`/placeorder?id=${id}?qty=${qty}`);
+    } else {
+      navigate('/placeorder');
+    }
   }
 
   return (

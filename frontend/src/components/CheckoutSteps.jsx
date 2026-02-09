@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 
-const CheckoutSteps = ({ step1, step2, step3, step4, mode }) => {
+const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
+  console.log(id, qty)
   return (
     <nav aria-label="Checkout Steps" className="max-w-sm mx-auto">
-      <ol className="flex justify-between text-center text-md">
+      <ol className="flex justify-between text-center text-sm lg:text-md">
         
         <li>
           {step1 ? (
-            <Link to={`/login?mode=${mode}`} className="font-medium hover:text-blue-700">
+            <Link to={id ? `/login?id=${id}&qty=${qty}` : `/login`} className="font-medium hover:text-blue-700">
               Sign In
             </Link>
           ) : (
@@ -19,7 +20,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, mode }) => {
 
         <li>
           {step2 ? (
-            <Link to={`/shipping?mode=${mode}`} className="font-medium hover:text-blue-700">
+            <Link to={id ? `/shipping?id=${id}&qty=${qty}` : `/shipping`} className="font-medium hover:text-blue-700">
               Shipping
             </Link>
           ) : (
@@ -31,7 +32,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, mode }) => {
 
         <li>
           {step3 ? (
-            <Link to={`/payment?mode=${mode}`} className="font-medium hover:text-blue-700">
+            <Link to={id ? `/payment?id=${id}&qty=${qty}` : `/payment`} className="font-medium hover:text-blue-700">
               Payment
             </Link>
           ) : (
@@ -43,7 +44,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, mode }) => {
 
         <li>
           {step4 ? (
-            <Link to={`/placeorder?mode=${mode}`} className="font-medium hover:text-blue-700">
+            <Link to={id ? `/placeorder?id=${id}&qty=${qty}` : `/placeorder`} className="font-medium hover:text-blue-700">
               Place Order
             </Link>
           ) : (
