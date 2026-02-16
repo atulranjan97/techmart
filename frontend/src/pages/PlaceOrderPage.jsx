@@ -1,11 +1,7 @@
 // Core
 import { useEffect, useState } from "react";
 // External
-import {
-  Link,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 // Custom
@@ -25,8 +21,10 @@ const PlaceOrderPage = () => {
     prepareBuyNow,
     { isLoading: loadingBuyNow, error: errorBuyNow, isError: isErrorBuyNow },
   ] = usePrepareBuyNowProductMutation();
-  const [createOrder, { isLoading: loadingCreateOrder, error: errorCreateOrder }] = useCreateOrderMutation();
-
+  const [
+    createOrder,
+    { isLoading: loadingCreateOrder, error: errorCreateOrder },
+  ] = useCreateOrderMutation();
 
   const productId = searchParams.get("id");
   const qty = searchParams.get("qty");
@@ -42,15 +40,22 @@ const PlaceOrderPage = () => {
     let redirectPath = null;
 
     if (isBuyNow) {
-      if (!qty || qty <= 0 || isNaN(qty)) redirectPath = "/";
+      if (!qty || isNaN(qty) || qty < 1) redirectPath = "/";
       else if (!cart.shippingAddress.address)
         redirectPath = `/shipping?id=${productId}&qty=${qty}`;
       else if (!cart.paymentMethod)
         redirectPath = `/payment?id=${productId}&qty=${qty}`;
     } else {
-      if (!cart.cartItems.length) redirectPath = "/cart";
-      else if (!cart.shippingAddress.address) redirectPath = "/shipping";
+      if (!cart.shippingAddress.address) redirectPath = "/shipping";
       else if (!cart.paymentMethod) redirectPath = "/payment";
+
+      // if (!cart.cartItems.length) {
+      //   const date = Date.now();
+      //   while (Date.now() - date < 5000) {}
+      //   redirectPath = "/cart";
+      // }
+      // else if (!cart.shippingAddress.address) redirectPath = "/shipping";
+      // else if (!cart.paymentMethod) redirectPath = "/payment";
     }
 
     if (redirectPath) {
@@ -76,7 +81,7 @@ const PlaceOrderPage = () => {
       }).unwrap();
 
       if (!isBuyNow) {
-        dispatch(clearCartItems());
+        dispatch(clearCartItems());   // clearing the cart items triggers re-render of this component because it has subscribed the cart state of redux
       }
       navigate(`/order/${res._id}`);
     } catch (error) {
@@ -151,17 +156,19 @@ const PlaceOrderPage = () => {
                   <div key={index} className="flex items-center gap-5 py-5">
                     {/* Image */}
                     <div className="bg-slate-100 rounded-xl p-2">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
+                      <Link to={`/products/${item._id}`}>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                      </Link>
                     </div>
 
                     {/* Name */}
                     <div className="flex-1">
                       <Link
-                        to={`/products/${item.product}`}
+                        to={`/products/${item._id}`}
                         className="font-semibold text-slate-800 hover:underline"
                       >
                         {item.name}
@@ -242,14 +249,18 @@ const PlaceOrderPage = () => {
 
                 {errorCreateOrder && (
                   <div className="mt-4">
-                    <Message variant="danger">{errorCreateOrder?.data?.message || errorCreateOrder.error}</Message>
+                    <Message variant="danger">
+                      {errorCreateOrder?.data?.message ||
+                        errorCreateOrder.error}
+                    </Message>
                   </div>
                 )}
 
-                {loadingCreateOrder ? (<Loader />) 
-                : (
+                {loadingCreateOrder ? (
+                  <Loader />
+                ) : (
                   <button
-                    className={`mt-6 w-full bg-techmart-color text-white py-3 rounded-lg font-semibold hover:bg-techmart-dark transition ${cart.cartItems.length === 0 && !isBuyNow ? "disabled:opacity-50 disabled:cursor-not-allowed" : "cursor-pointer"}`}
+                    className={`mt-6 w-full bg-techmart-color text-white py-3 rounded-lg font-semibold hover:bg-techmart-dark transition ${!cart.cartItems.length && !isBuyNow ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                     onClick={placeOrderHandler}
                   >
                     Place Order
@@ -257,7 +268,6 @@ const PlaceOrderPage = () => {
                 )}
               </>
             )}
-
           </div>
         )}
       </div>

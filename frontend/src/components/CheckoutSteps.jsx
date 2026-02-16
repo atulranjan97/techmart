@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
-  console.log(id, qty)
   return (
     <nav aria-label="Checkout Steps" className="max-w-sm mx-auto">
       <ol className="flex justify-between text-center text-sm lg:text-md">

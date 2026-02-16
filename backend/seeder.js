@@ -34,7 +34,7 @@ const importData = async ( ) => {
         process.exit(1);
     }
 }
-// this function will import(seed) data from our application to our database
+// this function will import(or seed) data from our application to our database
 
 const destroyData = async () => {
     try {

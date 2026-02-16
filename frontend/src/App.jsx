@@ -5,6 +5,7 @@ import 'react-toastify/ReactToastify.css'
 
 // Custom components
 import Header from './components/Header'
+// import Header from './components/Header/Header'
 import Footer from './components/Footer'
 
 

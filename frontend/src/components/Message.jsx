@@ -8,9 +8,9 @@ const variants = {
   error: "bg-red-100 text-red-800 border-red-300",
 }
 
-const Message = ({variant = "info", children}) => {
+const Message = ({variant = "info", children, className="p-4"}) => {
   return (
-    <div className={`border p-4 rounded-md ${variants[variant]}`} >
+    <div className={`border rounded-md ${variants[variant]} ${className}`} >
       {children}
     </div>
   )

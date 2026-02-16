@@ -58,8 +58,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 const getOrderById = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id).populate('user', 'name email');
     // Find an order by its ID and populate the 'user' field.
-    // Instead of returning just the user ObjectId, populate() 
-    // fetches the user's name and email from the User collection.
+    // Instead of returning just the user ObjectId, populate() fetches the user's name and email from the User collection.
     // This keeps the response secure (no sensitive fields) and more useful.
 
     if (order) {
@@ -107,7 +106,21 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route   PUT /api/orders/:id/deliver
 // @access  Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-    res.send('update order to delivered');
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        // update isDelivered to true
+        order.isDelivered = true;
+        // set deliveredAt field
+        order.deliveredAt = Date.now();
+
+        const updatedOrder = await order.save();
+
+        res.status(200).json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
 })
 
 
@@ -115,7 +128,8 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
-    res.send('get all orders');
+    const orders = await Order.find({}).populate('user', 'id name');
+    res.status(200).json(orders);
 })
 
 

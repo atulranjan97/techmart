@@ -14,7 +14,6 @@ import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 
 
-
 const Header = () => {
   const [open, setOpen] = useState(false);
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -37,34 +36,40 @@ const Header = () => {
 
   return (
     <nav className="w-full bg-techmart-color shadow-md sticky top-0 lg:static">
-      <div className="lg:max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-12 md:h-16">
+      <div className="lg:max-w-7xl mx-auto px-1 lg:px-6 lg:py-2">
+        <div className="flex items-center justify-between h-12">
           
-          {/* Hamburger */}
-          <button
-            className="lg:hidden text-white"
-            onClick={() => setOpen(!open)}
-          >
-            <GiHamburgerMenu />
-          </button>
+          <div className="flex lg:hidden">
+            {/* Hamburger */}
+            <button
+              className="text-white pl-3"
+              onClick={() => setOpen(!open)}
+            >
+              <GiHamburgerMenu className="size-5"/>
+            </button>
+
+            <Link to={'/'}>
+              <img src={'/images/techmart-logo.png'} alt="techmart-brand-logo" className="w-25" />
+            </Link>
+          </div>
 
           {/* Left - Logo */}
-          <div className="text-lg md:text-xl font-bold text-white">
+          <div className="hidden lg:block text-xl font-bold text-white">
             <Link to={'/'}>TechMart</Link>
           </div>
 
           {/* Middle - Links (Desktop) */}
           <div className="hidden lg:flex space-x-8 text-white">
             <Link to={"/"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Home</Link>
-            <Link to={"/products"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
-            <Link to={"/deals"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Deals</Link>
-            <Link to={"/contact"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
+            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
+            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Deals</Link>
+            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
           </div>
 
           {/* Right - Auth (Desktop) */}
-          <div className="flex">
+          <div className="flex gap-2 lg:gap-4">
 
-            <div className="flex">
+            <div className="flex order-last lg:order-0">
               <Link to={"/cart"} className="text-white flex items-center">
                   <GiShoppingCart className="size-7 md:size-9 mx-auto" />
                 <span className="text-sm hidden">Cart</span>
@@ -78,7 +83,7 @@ const Header = () => {
               { userInfo ? (
                 // <NavDropdown name={userInfo.name} />
                 <NavDropdown 
-                  title={userInfo.name}
+                  title={userInfo.name.trim().split(/\s+/)[0]}
                   items={[
                     { label: "Profile", link: "/profile" },
                     { label: "Logout", onClick: logoutHandler },
@@ -91,9 +96,19 @@ const Header = () => {
                 </Link>
               )}
 
+              {/* admin user */}
+              { userInfo && userInfo.isAdmin && (
+                <NavDropdown
+                  title = {'Admin'}
+                  items={[
+                    { label: "Products", link: "/admin/productlist" },
+                    { label: "Users", link: "/admin/userlist" },
+                    { label: "Orders", link: "/admin/orderlist" },
+                  ]}
+                />
+              )}
+
           </div>
-
-
         </div>
       </div>
 
@@ -101,9 +116,9 @@ const Header = () => {
       {open && (
         <div className="lg:hidden px-6 pb-4 space-y-3 text-white">
           <Link to={"/"} className="block" onClick={() => setOpen(false)}>Home</Link>
-          <Link to={"/products"} className="block" onClick={() => setOpen(false)}>Products</Link>
-          <Link to={"/deals"} className="block" onClick={() => setOpen(false)}>Deals</Link>
-          <Link to={"/contact"} className="block" onClick={() => setOpen(false)}>Contact</Link>
+          <Link to={"#"} className="block" onClick={() => setOpen(false)}>Products</Link>
+          <Link to={"#"} className="block" onClick={() => setOpen(false)}>Deals</Link>
+          <Link to={"#"} className="block" onClick={() => setOpen(false)}>Contact</Link>
 
           <hr />
 

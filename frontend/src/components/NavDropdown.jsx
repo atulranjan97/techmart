@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const NavDropdown = ({ title, items }) => {
   const [open, setOpen] = useState(false);
@@ -20,15 +21,22 @@ const NavDropdown = ({ title, items }) => {
       {/* Trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 text-sm font-medium text-white hover:font-bold"
+        className="flex items-center gap-1 text-sm font-medium text-white cursor-pointer"
       >
         {title}
-        <span className="text-xs">▼</span>
+        {/* <span className="text-xs">▼</span> */}
+        <span className="text-xs">
+          {open ? (
+            <FaChevronUp />
+          ) : (
+            <FaChevronDown />
+          )}
+        </span>
       </button>
 
       {/* Menu */}
       {open && (
-        <div className="absolute right-0 mt-9 w-40 max-w-[90vw] border border-gray-300 rounded-sm bg-white shadow-lg">
+        <div className="absolute right-0 mt-10 w-40 max-w-[90vw] border border-gray-300 rounded-sm bg-white shadow-lg z-50">
           {items.map((item, index) =>
             item.link ? (
               <Link

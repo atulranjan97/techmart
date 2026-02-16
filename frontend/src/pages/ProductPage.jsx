@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import { addToCart } from "../slices/cartSlice";
+import CustomSelect from "../components/CustomSelect";
 
 const ProductPage = () => {
   const { id: productId } = useParams();
@@ -54,7 +55,7 @@ const ProductPage = () => {
   };
 
   const checkoutHandler = async () => {
-    navigate(`/placeorder?id=${product._id}&qty=${qty}`)
+    navigate(`/placeorder?id=${product._id}&qty=${qty}`);
   };
 
   return (
@@ -125,19 +126,19 @@ const ProductPage = () => {
               {product.countInStock > 0 && (
                 <div className="flex items-center gap-4 mt-6">
                   <span className="font-semibold text-gray-700">Quantity:</span>
-                  <select
-                    className="w-20 border rounded-md px-3 py-1"
-                    name=""
+
+                  <CustomSelect
+                    options={[...Array(product.countInStock).keys()].map(
+                      (x) => ({
+                        value: x + 1,
+                        label: `${x + 1}`,
+                      }),
+                    )}
                     value={qty}
-                    onChange={(e) => setQty(Number(e.target.value))}
-                  >
-                    {[...Array(product.countInStock).keys()].map((x) => (
-                      <option key={x + 1} value={x + 1}>
-                        {" "}
-                        {x + 1}{" "}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setQty}
+                    visibleOptions={5} // only 5 visible → rest scroll
+                    className={""}
+                  />
                 </div>
               )}
 

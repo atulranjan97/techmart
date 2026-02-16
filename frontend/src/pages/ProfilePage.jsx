@@ -58,7 +58,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-20 py-10 px-4">
+    <div className="bg-gray-20 py-10 px-4">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* PROFILE CARD */}
         <div className="bg-white rounded-lg shadow-sm p-8 h-fit">
@@ -106,7 +106,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            <button className="w-full bg-black text-white py-2.5 rounded-lg font-medium">
+            <button className="w-full bg-gray-700 text-white py-2.5 rounded-lg font-medium cursor-pointer">
               Update Profile
             </button>
 
@@ -133,7 +133,7 @@ const ProfilePage = () => {
                 className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
                 {/* ORDER HEADER */}
-                <div className="hidden lg:flex flex-col md:flex-row md:justify-between gap-4 p-4 border-b-2 border-gray-300">
+                <div className="hidden lg:flex flex-col lg:flex-row lg:justify-between gap-4 p-4 border-b-2 border-gray-300">
                   <div className="flex flex-wrap gap-6 text-sm">
                     <div>
                       <p className="text-gray-500">ORDER PLACED</p>
@@ -205,7 +205,7 @@ const ProfilePage = () => {
                       </Link>
 
                       <div className="flex flex-wrap gap-3 mt-4">
-                        <Link to={'/'} className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50 cursor-pointer">
+                        <Link to={`/placeorder?id=${item.product}&qty=${1}`} className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50 cursor-pointer">
                           Buy Again
                         </Link>
 

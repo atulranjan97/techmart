@@ -2,13 +2,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 // External Modules
-import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom'
+import {createBrowserRouter, createRoutesFromElements, RouterProvider, Route} from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 // Custom Modules
-import PrivateRoute from './components/PrivateRoute.jsx'
 import './index.css'
 import App from './App.jsx'
+import PrivateRoute from './components/PrivateRoute.jsx'
+import AdminRoute from './components/AdminRoute.jsx'
 import HomePage from './pages/HomePage.jsx'
 import ProductPage from './pages/ProductPage.jsx'
 import store from './store.js'
@@ -20,6 +21,11 @@ import PaymentPage from './pages/PaymentPage.jsx'
 import PlaceOrderPage from './pages/PlaceOrderPage.jsx'
 import OrderPage from './pages/OrderPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import OrderListPage from './pages/admin/OrderListPage.jsx'
+import ProductListPage from './pages/admin/ProductListPage.jsx'
+import ProductEditPage from './pages/admin/ProductEditPage.jsx'
+import UserListPage from './pages/admin/UserListPage.jsx'
+import UserEditPage from './pages/admin/UserEditPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +44,15 @@ const router = createBrowserRouter(
         <Route path='/placeorder' element={<PlaceOrderPage />} />
         <Route path='/order/:id' element={<OrderPage />} />
         <Route path='/profile' element={<ProfilePage />} />
+      </Route>
+
+      {/* admin route */}
+      <Route path='' element={<AdminRoute />}>
+        <Route path='/admin/orderlist' element={<OrderListPage />} />
+        <Route path='/admin/productlist' element={<ProductListPage />} />
+        <Route path='/admin/product/:id/edit' element={<ProductEditPage />} />
+        <Route path='/admin/userlist' element={<UserListPage />} />
+        <Route path='/admin/user/:id/edit' element={<UserEditPage />} />
       </Route>
     </Route>
   )
