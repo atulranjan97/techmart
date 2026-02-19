@@ -7,15 +7,30 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductReview,
+  getTopProducts,
 } from "../controller/productController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
-// router.get('/', getProducts)
+// Static Routes
 router.route("/").get(getProducts).post(protect, admin, createProduct);
+router.route("/top").get(getTopProducts);  
 
-// router.get('/:id', getProductById)
-router.route("/:id").get(getProductById).put(protect, admin, updateProduct).delete(protect, admin, deleteProduct);
+// Nested Routes
+router.route("/:id/reviews").post(protect, createProductReview);
+
+// Dynamic Routes
+router
+  .route("/:id")
+  .get(getProductById)
+  .put(protect, admin, updateProduct)
+  .delete(protect, admin, deleteProduct);
+
 
 router.route("/checkout").post(prepareCheckout);
 
 export default router;
+
+// IMPORTANT: Keep dynamic routes (/:id) BELOW specific routes like /top or /checkout.
+// Express matches routes in order. If /:id comes first, it will capture
+// requests like /top (id = "top") and the specific route will never run.

@@ -17,7 +17,7 @@ const NavDropdown = ({ title, items }) => {
   }, []);
 
   return (
-    <div className="relative flex" ref={ref}>
+    <div className="hidden relative lg:flex" ref={ref}>
       {/* Trigger */}
       <button
         onClick={() => setOpen(!open)}

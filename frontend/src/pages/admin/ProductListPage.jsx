@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 // Custom Modules
 import {
   useGetProductsQuery,
@@ -12,10 +13,13 @@ import {
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { useState } from "react";
-import { useRef } from "react";
+import Paginate from "../../components/Paginate";
 
 const ProductListPage = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    pageNumber,
+  });
 
   const [createProduct, { isLoading: loadingCreate, error: errorCreate }] =
     useCreateProductMutation();
@@ -52,9 +56,9 @@ const ProductListPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 lg:p-6 flex flex-col gap-6">
+    <div className="max-w-7xl mx-auto lg:p-6 flex flex-col gap-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Products</h2>
+        {/* <h2 className="text-2xl font-bold">Products</h2> */}
         {isLoading ? (
           <></>
         ) : loadingCreate ? (
@@ -78,23 +82,19 @@ const ProductListPage = () => {
         </Message>
       ) : (
         <div className="bg-white lg:shadow-md rounded-xl overflow-hidden lg:text-sm">
-          {/* HEADER */}
-          <div
-            className="hidden lg:grid 
-        grid-cols-[minmax(0,2.2fr)_minmax(0,3fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)_180px]
-        gap-4 bg-gray-100 p-3 font-semibold text-gray-700 border-b border-gray-300"
-          >
-            <span className="truncate">ID</span>
-            <span className="truncate">Name</span>
-            <span>Price</span>
-            <span className="truncate">Category</span>
-            <span className="truncate">Brand</span>
-            <span className="text-center">Actions</span>
-          </div>
-
           {/* DESKTOP */}
           <div className="hidden lg:flex flex-col">
-            {products.map((product) => (
+            {/* HEADER */}
+            <div className="hidden lg:grid grid-cols-[minmax(0,2.2fr)_minmax(0,3fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)_180px] gap-4 bg-gray-100 p-3 font-semibold text-gray-700 border-b border-gray-300">
+              <span className="truncate">ID</span>
+              <span className="truncate">Name</span>
+              <span>Price</span>
+              <span className="truncate">Category</span>
+              <span className="truncate">Brand</span>
+              <span className="text-center">Actions</span>
+            </div>
+            {/* TABLE ROW */}
+            {data.products.map((product) => (
               <div
                 key={product._id}
                 className="grid 
@@ -142,8 +142,8 @@ const ProductListPage = () => {
           </div>
 
           {/* MOBILE */}
-          <div className="lg:hidden flex flex-col gap-4 bg-gray-200">
-            {products.map((product) => (
+          <div className="lg:hidden flex flex-col gap-4 bg-slate-100">
+            {data.products.map((product) => (
               <div
                 key={product._id}
                 className="rounded-lg p-4 shadow-sm bg-white flex flex-col gap-2"
@@ -154,7 +154,8 @@ const ProductListPage = () => {
 
                 <div className="text-sm text-gray-600">
                   <p>
-                    <strong>Price:</strong> ₹{product.price.toLocaleString("en-IN")}
+                    <strong>Price:</strong> ₹
+                    {product.price.toLocaleString("en-IN")}
                   </p>
                   <p>
                     <strong>Category:</strong> {product.category}
@@ -192,6 +193,7 @@ const ProductListPage = () => {
           </div>
         </div>
       )}
+      {!isLoading && <Paginate pages={data.pages} page={data.page} isAdmin />}
     </div>
   );
 };

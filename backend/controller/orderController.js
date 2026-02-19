@@ -132,6 +132,14 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(200).json(orders);
 })
 
+// @desc    Get recent orders
+// @route   GET /api/orders/recent
+// @access  Private/Admin
+const getRecentOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate('user', 'id name').limit(5).sort({createdAt: -1});
+    res.status(200).json(orders);
+})
+
 
 export {
     addOrderItems,
@@ -139,5 +147,6 @@ export {
     getOrderById,
     updateOrderToPaid,
     updateOrderToDelivered,
-    getOrders
+    getOrders,
+    getRecentOrders
 };

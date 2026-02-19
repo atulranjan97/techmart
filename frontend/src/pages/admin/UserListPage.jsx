@@ -33,10 +33,10 @@ const UserListPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 lg:p-6">
+    <div className="max-w-7xl mx-auto lg:p-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <h2 className="w-full text-3xl font-bold">Users</h2>
+        {/* <h2 className="w-full text-3xl font-bold">Users</h2> */}
 
         {isLoading ? (
           <Loader className="size-10 mx-auto" />
@@ -113,7 +113,7 @@ const UserListPage = () => {
             </div>
 
             {/* -----MOBILE VIEW----- */}
-            <div className="lg:hidden flex flex-col gap-4 bg-gray-200">
+            <div className="lg:hidden flex flex-col gap-4 bg-gray-100">
               {users.map((user) => (
                 <div
                   key={user._id}

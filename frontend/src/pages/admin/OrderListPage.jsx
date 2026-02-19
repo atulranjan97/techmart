@@ -10,9 +10,9 @@ const OrderListPage = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto">
+    <div className="max-w-7xl lg:p-6 mx-auto">
       {/* Header */}
-      <h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">Orders</h1>
+      {/* <h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">Orders</h1> */}
 
       {isLoading ? (
         <Loader />
@@ -69,7 +69,7 @@ const OrderListPage = () => {
                   </span>
                 </div>
 
-                <Link to={`/order/${order._id}`}>
+                <Link to={`/admin/order/${order._id}`}>
                   <button className="w-fit mx-auto mt-2 px-4 py-2 font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition">
                     Details
                   </button>
@@ -114,16 +114,16 @@ const OrderListPage = () => {
                       key={order._id}
                       className="border-t border-gray-300 hover:bg-gray-100 transition"
                     >
-                      <td className="p-2 text-sm text-gray-800">
+                      <td className="p-2 text-sm text-gray-800 truncate">
                         {order._id}
                       </td>
-                      <td className="p-2 text-sm font-semibold text-gray-800">
+                      <td className="p-2 text-sm font-semibold text-gray-800 truncate">
                         {order.user.name}
                       </td>
-                      <td className="p-2 text-sm text-gray-800">
+                      <td className="p-2 text-sm text-gray-800 truncate">
                         {order.createdAt.substring(0, 10)}
                       </td>
-                      <td className="p-2 text-sm text-gray-800">
+                      <td className="p-2 text-sm text-gray-800 truncate">
                         ₹{order.totalPrice.toLocaleString("en-IN")}
                       </td>
 
@@ -153,7 +153,7 @@ const OrderListPage = () => {
                       </td>
 
                       <td className="p-2">
-                        <Link to={`/order/${order._id}`}>
+                        <Link to={`/admin/order/${order._id}`}>
                           <button className="px-4 py-2 text-sm font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition cursor-pointer">
                             Details
                           </button>
