@@ -22,17 +22,17 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5, // It controls how long cached data survives after the UI stops using it.
     }),
-    prepareBuyNowProduct: builder.mutation({
+    prepareBuyNowProduct: builder.query({
       query: ({ productId, qty }) => ({
         url: `${PRODUCTS_URL}/checkout`, // /api/products/checkout
-        method: "POST",
-        body: { productId, qty },
+        params: {productId, qty},
       }),
     }),
     createProduct: builder.mutation({
-      query: () => ({
+      query: (data) => ({
         url: PRODUCTS_URL,
         method: "POST",
+        body: data,
       }),
       invalidatesTags: ["Products"], //  Tells RTK Query the "Products" cache is stale and should be refetched.
     }),
@@ -79,7 +79,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetProductsQuery,
   useGetProductDetailsQuery,
-  usePrepareBuyNowProductMutation,
+  usePrepareBuyNowProductQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useUploadProductImageMutation,

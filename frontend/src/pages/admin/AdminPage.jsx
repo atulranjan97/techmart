@@ -11,8 +11,8 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
 
+  const { pathname } = useLocation();
   const getTitle = () => {
-    const { pathname } = useLocation();
     let title = "Dashboard";
     if (pathname.includes("productlist")) {
       title = "Products";

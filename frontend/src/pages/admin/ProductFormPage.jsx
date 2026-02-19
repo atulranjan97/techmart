@@ -6,14 +6,16 @@ import { toast } from "react-toastify";
 // Custom modules
 import {
   useGetProductDetailsQuery,
+  useCreateProductMutation,
   useUpdateProductMutation,
   useUploadProductImageMutation,
 } from "../../slices/productsApiSlice";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 
-const ProductEditPage = () => {
+const ProductFormPage = () => {
   const { id: productId } = useParams();
+  const isEditMode = Boolean(productId);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -28,9 +30,11 @@ const ProductEditPage = () => {
   const {
     data: product,
     isLoading,
-    refetch,
     error,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsQuery(productId, { skip: !isEditMode });  // skip -> when not in edit mode, the query won't run
+
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation();
 
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
@@ -54,36 +58,50 @@ const ProductEditPage = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const updatedProduct = {
-      productId,
-      name,
-      price,
-      image,
-      brand,
-      category,
-      countInStock,
-      description,
-    };
+    try {
+      if (isEditMode) {
+        await updateProduct({
+          productId,
+          name,
+          price,
+          image,
+          brand,
+          category,
+          countInStock,
+          description,
+        }).unwrap();
 
-    const result = await updateProduct(updatedProduct);
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Product updated");
+        toast.success("Product updated");
+      } else {
+        await createProduct({
+          name,
+          price,
+          image,
+          brand,
+          category,
+          countInStock,
+          description,
+        }).unwrap();
+
+        toast.success("Product created");
+      }
+
       navigate("/admin/productlist");
+    } catch (err) {
+      toast.error(err?.data?.message || "Something went wrong");
     }
   };
 
   const uploadFileHandler = async (e) => {
-    const formData = new FormData();    // `FormData` is a browser API used to send data in `multipart/form-data`
+    const formData = new FormData(); // `FormData` is a browser API used to send data in `multipart/form-data`
     setFileName(e.target.files[0].name);
-    formData.append('image', e.target.files[0]);
+    formData.append("image", e.target.files[0]);
     try {
       const res = await uploadProductImage(formData).unwrap();
       toast.success(res.message);
-      setImage(res.image)
+      setImage(res.image);
     } catch (err) {
-      toast.error(err?.data?.message || err.error)
+      toast.error(err?.data?.message || err.error);
     }
   };
 
@@ -97,7 +115,9 @@ const ProductEditPage = () => {
         Go Back
       </Link>
       <div className="w-full lg:max-w-4xl bg-white rounded-xl p-4 lg:p-8 mx-auto border border-slate-300 my-5">
-        <h2 className="text-2xl font-semibold mb-5">Edit Product</h2>
+        <h2 className="text-2xl font-semibold mb-5">
+          {isEditMode ? "Edit Product" : "Create Product"}
+        </h2>
 
         {loadingUpdate && <Loader />}
 
@@ -161,7 +181,7 @@ const ProductEditPage = () => {
                 name="price"
                 id="price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(Number(e.target.value))}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Enter price"
               />
@@ -180,7 +200,7 @@ const ProductEditPage = () => {
                 name="countInStock"
                 id="countinstock"
                 value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
+                onChange={(e) => setCountInStock(Number(e.target.value))}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Enter Count in stocks"
               />
@@ -242,29 +262,34 @@ const ProductEditPage = () => {
                 placeholder="Enter"
               />
 
-              <div className="border border-gray-300 flex gap-2 items-center text-sm mt-2">
-                <label
-                  htmlFor="fileInput"
-                  className="cursor-pointer bg-gray-200 px-2 py-1"
-                >
-                  Choose File
-                </label>
-                <input
-                  type="file"
-                  id="fileInput"
-                  hidden
-                  onChange={uploadFileHandler}
-                />
-                <p className="">{fileName}</p>
-              </div>
+              {loadingUpload ? (
+                <Loader className="size-6 mt-2" />
+              ) : (
+                <div className="border border-gray-300 flex gap-2 items-center text-sm mt-2">
+                  <label
+                    htmlFor="fileInput"
+                    className="cursor-pointer bg-gray-200 px-2 py-1"
+                  >
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    hidden
+                    onChange={uploadFileHandler}
+                  />
+                  <p className="">{fileName}</p>
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full cursor-pointer bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition mt-4"
+              disabled={loadingUpdate || loadingCreate}
+              className="w-full cursor-pointer bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition mt-4 disabled:opacity-50"
             >
-              Update Product
+              {isEditMode ? "Update Product" : "Create Product"}
             </button>
 
             {isLoading && <Loader />}
@@ -275,4 +300,4 @@ const ProductEditPage = () => {
   );
 };
 
-export default ProductEditPage;
+export default ProductFormPage;

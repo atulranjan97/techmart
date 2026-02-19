@@ -287,9 +287,9 @@ const OrderPage = () => {
           {/* PAY ORDER PLACEHOLDER */}
           {!order.isPaid && order.user._id === userInfo._id && (
             <div className="">
-              {loadingPay && <Loader />}
+              {loadingPay && <Loader className="mx-auto" />}
               {isPending ? (
-                <Loader />
+                <Loader className="mx-auto" />
               ) : (
                 <div className="flex flex-col gap-3">
                   {/* <button onClick={onApproveTest} className="bg-yellow-400 hover:bg-yellow-500 w-full py-2 italic font-black rounded-sm text-xl cursor-pointer">

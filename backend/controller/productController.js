@@ -50,23 +50,26 @@ const getProductById = asyncHandler(async (req, res) => {
 // })
 
 // @desc    Create a product
-// @route   GET /api/products
+// @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
+  const { name, image, price, description, brand, category, countInStock } =
+    req.body;
   const product = new Product({
-    name: "Sample name",
-    price: 0,
+    name,
+    price,
     user: req.user._id,
-    image: "/images/sample.jpg",
-    brand: "Sample brand",
-    category: "Sample category",
-    countInStock: 0,
+    image,
+    brand,
+    category,
+    countInStock,
     numReviews: 0,
-    description: "Sample description",
+    rating: 0,
+    description,
   });
 
-  const createProduct = await product.save();
-  res.status(201).json(createProduct);
+  const createdProduct = await product.save();
+  res.status(201).json(createdProduct);
 });
 
 // @desc    Update a product
@@ -158,13 +161,13 @@ const getTopProducts = asyncHandler(async (req, res) => {
 })
 
 // @desc    Fetch a product and calculate the prices
-// @route   POST /api/products/checkout
+// @route   GET /api/products/checkout
 // @access  Public
 const prepareCheckout = asyncHandler(async (req, res) => {
-  const { productId, qty } = req.body;
+  const { productId, qty } = req.query;
 
   if (!productId || !qty) {
-    res.status(404);
+    res.status(400);
     throw new Error("ProductId and qty required");
   }
 

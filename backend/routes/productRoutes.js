@@ -15,6 +15,8 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 // Static Routes
 router.route("/").get(getProducts).post(protect, admin, createProduct);
 router.route("/top").get(getTopProducts);  
+router.route("/checkout").get(prepareCheckout);
+
 
 // Nested Routes
 router.route("/:id/reviews").post(protect, createProductReview);
@@ -27,7 +29,6 @@ router
   .delete(protect, admin, deleteProduct);
 
 
-router.route("/checkout").post(prepareCheckout);
 
 export default router;
 

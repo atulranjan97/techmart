@@ -28,11 +28,12 @@ import OrderPage from "./pages/OrderPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import OrderListPage from "./pages/admin/OrderListPage.jsx";
 import ProductListPage from "./pages/admin/ProductListPage.jsx";
-import ProductEditPage from "./pages/admin/ProductEditPage.jsx";
+import ProductFormPage from "./pages/admin/ProductFormPage.jsx";
 import UserListPage from "./pages/admin/UserListPage.jsx";
 import UserEditPage from "./pages/admin/UserEditPage.jsx";
 import AdminPage from "./pages/admin/AdminPage.jsx";
 import DashboardPage from "./pages/admin/DashboardPage.jsx";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -72,12 +73,14 @@ const router = createBrowserRouter(
             path="/admin/productlist/:pageNumber"
             element={<ProductListPage />}
           />
-          <Route path="/admin/product/:id/edit" element={<ProductEditPage />} />
+          <Route path="/admin/product/create" element={<ProductFormPage />} />
+          <Route path="/admin/product/:id/edit" element={<ProductFormPage />} />
           <Route path="/admin/userlist" element={<UserListPage />} />
           <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
           <Route path="/admin/order/:id" element={<OrderPage />} />
         </Route>
       </Route>
+
     </>,
   ),
 );
@@ -86,6 +89,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <PayPalScriptProvider deferLoading={true}>
+        <ToastContainer position="top-right" className="z-99999!" />
         <RouterProvider router={router} />
       </PayPalScriptProvider>
     </Provider>

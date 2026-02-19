@@ -6,21 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 // Custom
 import { useCreateOrderMutation } from "../slices/ordersApiSlice";
+import { usePrepareBuyNowProductQuery } from "../slices/productsApiSlice";
 import { clearCartItems } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { usePrepareBuyNowProductMutation } from "../slices/productsApiSlice";
 
 const PlaceOrderPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [
-    prepareBuyNow,
-    { isLoading: loadingBuyNow, error: errorBuyNow, isError: isErrorBuyNow },
-  ] = usePrepareBuyNowProductMutation();
   const [
     createOrder,
     { isLoading: loadingCreateOrder, error: errorCreateOrder },
@@ -30,11 +26,12 @@ const PlaceOrderPage = () => {
   const qty = searchParams.get("qty");
   const isBuyNow = Boolean(productId);
 
-  const [buyNowItem, setBuyNowItem] = useState({ product: [] });
+  const {data: buyNowItem, isLoading: loadingBuyNow, error: errorBuyNow, isError: isErrorBuyNow} = usePrepareBuyNowProductQuery({productId, qty}, {skip: !isBuyNow});
+
   const cart = useSelector((state) => state.cart);
 
-  const checkoutItems = isBuyNow ? buyNowItem.product : cart.cartItems;
-  const checkoutPriceInfo = isBuyNow ? buyNowItem : cart;
+  const checkoutItems = isBuyNow ? buyNowItem?.product || [] : cart.cartItems;
+  const checkoutPriceInfo = isBuyNow ? buyNowItem || {} : cart;
 
   useEffect(() => {
     let redirectPath = null;
@@ -48,23 +45,11 @@ const PlaceOrderPage = () => {
     } else {
       if (!cart.shippingAddress.address) redirectPath = "/shipping";
       else if (!cart.paymentMethod) redirectPath = "/payment";
-
-      // if (!cart.cartItems.length) {
-      //   const date = Date.now();
-      //   while (Date.now() - date < 5000) {}
-      //   redirectPath = "/cart";
-      // }
-      // else if (!cart.shippingAddress.address) redirectPath = "/shipping";
-      // else if (!cart.paymentMethod) redirectPath = "/payment";
     }
 
     if (redirectPath) {
       navigate(redirectPath);
       return;
-    }
-
-    if (isBuyNow) {
-      prepareBuyNow({ productId, qty }).unwrap().then(setBuyNowItem);
     }
   }, [isBuyNow, qty, productId, cart, navigate]);
 

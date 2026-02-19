@@ -64,13 +64,13 @@ const ProductListPage = () => {
         ) : loadingCreate ? (
           <Loader />
         ) : (
-          <button
+          <Link
+            to={"/admin/product/create"}
             className="flex items-center gap-2 px-2 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 whitespace-nowrap cursor-pointer"
-            onClick={createProductHandler}
           >
             <FaEdit />
             Create Product
-          </button>
+          </Link>
         )}
       </div>
 

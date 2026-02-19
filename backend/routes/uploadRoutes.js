@@ -46,15 +46,14 @@ function checkFileType(file, cb) {
 // to do the actual upload
 const upload = multer({
   storage,
-  checkFileType,
 });
 
 // create the actual route
 router.post("/", upload.single("image"), (req, res) => {
-  res.send({
-    message: "Image uploaded",
-    image: `/${req.file.path}`,
-  });
+  // res.send({
+  //   message: "Image uploaded",
+  //   image: `/${req.file.path}`,
+  // });
 });
 // `upload.single('image')` Multer ko bata raha hai ki form mein ek file field hai jiska naam `image` hai.
 // Multer automatically `multipart/form-data` ko parse karega
