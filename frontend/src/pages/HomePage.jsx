@@ -38,7 +38,7 @@ const HomePage = () => {
           )}
 
           {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 w-fit mx-auto"> */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 w-fit mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 my-3 w-fit mx-auto">
             {data.products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

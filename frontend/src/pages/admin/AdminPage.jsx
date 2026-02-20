@@ -62,24 +62,28 @@ const AdminPage = () => {
         <nav className="space-y-3">
           <Link
             to={"/admin"}
+            onClick={() => setSidebarOpen(false)}
             className="block px-4 py-2 text-lg font-semibold rounded hover:bg-techmart-dark transition"
           >
             Dashboard
           </Link>
           <Link
             to={"/admin/productlist"}
+            onClick={() => setSidebarOpen(false)}
             className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
           >
             Products
           </Link>
           <Link
             to={"/admin/userlist"}
+            onClick={() => setSidebarOpen(false)}
             className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
           >
             Users
           </Link>
           <Link
             to={"/admin/orderlist"}
+            onClick={() => setSidebarOpen(false)}
             className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
           >
             Orders

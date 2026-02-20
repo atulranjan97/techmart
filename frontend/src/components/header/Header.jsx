@@ -8,6 +8,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
 import SearchBox from "../SearchBox";
+import { CiSearch } from "react-icons/ci";
 // import { RxHamburgerMenu } from "react-icons/rx";
 
 // Custom Module
@@ -17,10 +18,12 @@ import { logout } from "../../slices/authSlice";
 import CartIcon from "./CartIcon";
 import MobileDrawer from "./MobileDrawer";
 import ProfileDrawer from "./ProfileDrawer";
+import { resetCart } from "../../slices/cartSlice";
 
 const Header = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const userInfo = useSelector((state) => state.auth.userInfo);
 
@@ -33,6 +36,7 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      dispatch(resetCart());
       navigate("/login");
     } catch (err) {
       console.log(err);
@@ -57,8 +61,14 @@ const Header = () => {
               <Link to={"/"}>TechMart</Link>
             </div>
 
-            {/* Search */}
-            <SearchBox className={"hidden lg:block"} />
+            {/* Search (Mobile) */}
+            {/* <CiSearch
+              className="lg:hidden text-white size-6"
+              onClick={() => setIsSearchOpen(curr => !curr)}
+            /> */}
+
+            {/* Search (Desktop) */}
+            {/* <SearchBox className={"hidden lg:block"} /> */}
 
             {/* Middle - Links (Desktop) */}
             {/* <div className="hidden lg:flex space-x-8 text-white">
@@ -70,6 +80,13 @@ const Header = () => {
 
             {/* Right - Auth (Mobile) */}
             <div className="flex items-center gap-3 lg:gap-4 mr-3">
+              {/* Search (Desktop) */}
+              <SearchBox className={"hidden lg:block"} />
+              {/* Search (Mobile) */}
+              <CiSearch
+                className="lg:hidden text-white size-6"
+                onClick={() => setIsSearchOpen((curr) => !curr)}
+              />
               {userInfo ? (
                 <>
                   {/* Cart */}
@@ -114,10 +131,20 @@ const Header = () => {
                 </Link>
               )}
 
-              <CartIcon cartItems={cartItems}/>
+              <CartIcon cartItems={cartItems} />
             </div>
           </div>
         </div>
+
+        {isSearchOpen && (
+          <div className="lg:hidden w-full px-1 my-1 sticky top-0 z-50 ">
+            <SearchBox
+              className=""
+              isOpen={isSearchOpen}
+              setIsOpen={setIsSearchOpen}
+            />
+          </div>
+        )}
       </nav>
 
       <MobileDrawer isOpen={isMobileOpen} setIsOpen={setIsMobileOpen}>

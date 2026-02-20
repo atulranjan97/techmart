@@ -13,11 +13,16 @@ const authSlice = createSlice({
         setCredentials: (state, action) => {
             // when we hit our backend through the userApiSlice, we get our userInfo which we gonna send it in the action as the payload
             state.userInfo = action.payload;
+            
+            const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;  // 1 day
+            // const expirationTime = new Date().getTime() + 60 * 1000;  // 1 minute (for testing)
+
             localStorage.setItem('userInfo', JSON.stringify(action.payload));
+            localStorage.setItem('expirationTime', expirationTime);
         },  
         logout: (state) => {
             state.userInfo = null; 
-            localStorage.removeItem('userInfo');
+            localStorage.clear();   // clear entire local storage after logging out
         },
     }
 })

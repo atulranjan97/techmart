@@ -27,18 +27,21 @@ const storage = multer.diskStorage({
 });
 
 // we don't want people to be able to upload like pdfs or exe file or anything like that
-function checkFileType(file, cb) {
-  const fileTypes = /jpg|jpeg|png/; // this is regular expression of what we want to allow (here we allow only jpg, jpeg, png)
+function fileFilter(req, file, cb) {
+  const fileTypes = /jpe?g|png|webp/; // this is regular expression of what we want to allow (here we allow only jpg, jpeg, png)
+  const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
+
   const extname = fileTypes.test(
-    path.extname(file.originalname).toLocaleLowerCase(),
+    path.extname((file.originalname).toLocaleLowerCase()),
   );
-  const mimetype = fileTypes.test(file.mimetype);
+
+  const mimetype = mimetypes.test(file.mimetype);
 
   // Check if the extname and the mimetype is valid
   if (extname && mimetype) {
-    return cb(null, true);
+    cb(null, true);
   } else {
-    cb("Images only!"); // return error saying images only (first argument is for error)
+    cb(new Error("Images only!"), false); // return error saying images only (first argument is for error)
   }
   // test is just to see if it's gonna match our regular expression, if it does we gonna return the callback with true as the second argument else we gonna return the callback with an error coz remember, the first argument is your error
 }
@@ -46,15 +49,24 @@ function checkFileType(file, cb) {
 // to do the actual upload
 const upload = multer({
   storage,
+  fileFilter,
 });
 
-// create the actual route
-router.post("/", upload.single("image"), (req, res) => {
-  // res.send({
-  //   message: "Image uploaded",
-  //   image: `/${req.file.path}`,
-  // });
+const uploadSingleImage = upload.single("image");
+
+router.post("/", (req, res) => {
+  uploadSingleImage(req, res, function (err) {
+    if (err) {
+      res.status(400).send({ message: err.message });
+    }
+
+    res.status(200).send({
+      message: "Image uploaded successfully",
+      image: `/${req.file.path}`,
+    });
+  });
 });
+// create the actual route
 // `upload.single('image')` Multer ko bata raha hai ki form mein ek file field hai jiska naam `image` hai.
 // Multer automatically `multipart/form-data` ko parse karega
 // Text field(eg. username="atul") agar exist karta hai to use `req.body` mein daal dega
@@ -62,6 +74,5 @@ router.post("/", upload.single("image"), (req, res) => {
 
 // upload.single('image') is the middleware we're using and we're using single because we only wanna allow single file. You can make it so that you can upload multiple files as an array, it's a little more advance but you can do that, but in this case we're only using a single image and we're calling it `image` but you can use anything here, this is the fieldname. so `file.fieldname` is going to be 'image'
 // actual upload is handled by middleware( ie. upload.single('image') )
-
 
 export default router;

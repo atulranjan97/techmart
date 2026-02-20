@@ -1,6 +1,7 @@
 // Local Modules
 import Product from "../models/productModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
+import { calcPrices } from "../utils/calcPrices.js";
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -189,10 +190,7 @@ const prepareCheckout = asyncHandler(async (req, res) => {
   }
 
   // Price calculations
-  const itemsPrice = Number((product.price * Number(qty)).toFixed(2));
-  const shippingPrice = Number((itemsPrice < 499 ? 50 : 0).toFixed(2));
-  const taxPrice = Number((0.18 * itemsPrice).toFixed(2));
-  const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2));
+  const {itemsPrice, shippingPrice, taxPrice, totalPrice} = calcPrices([{...product, qty}]);
 
   const checkoutSummary = {
     product: [{ ...product, qty }],

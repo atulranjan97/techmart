@@ -50,7 +50,7 @@ const OrderPage = () => {
           type: "resetOptions", // Reloads PayPal script with new configuration.
           value: {
             "client-id": paypal.clientId, // load script using this client ID
-            currency: "USD",
+            currency: "USD",  // deal currency in USD, since paypal doesn't support INR
           },
         });
         paypalDispatch({ type: "setLoadingStatus", value: "pending" });
@@ -88,7 +88,7 @@ const OrderPage = () => {
     // actions comes from paypal
     return actions.order.capture().then(async function (details) {
       try {
-        await payOrder({ orderId, details });
+        await payOrder({ orderId, details }).unwrap();
         refetch();
         toast.success("Payment successful");
       } catch (err) {
@@ -120,9 +120,9 @@ const OrderPage = () => {
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger" />
+    <Message variant="danger">{error?.data?.message || error.error}</Message>
   ) : (
-    <div className="max-w-6xl mx-auto space-y-3 lg:space-y-4 px-2 lg:px-5 py-8">
+    <div className="max-w-6xl mx-auto space-y-3 lg:space-y-4 px-2 lg:px-5 py-2">
       {/* Header */}
       <div className="bg-white shadow rounded-lg p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="">

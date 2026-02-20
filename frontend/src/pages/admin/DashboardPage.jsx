@@ -106,7 +106,7 @@ const DashboardPage = () => {
                   </span>
                 </div>
 
-                <Link to={`/order/${order._id}`}>
+                <Link to={`/admin/order/${order._id}`}>
                   <button className="w-fit mx-auto mt-2 px-4 py-2 font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition">
                     Details
                   </button>
@@ -190,7 +190,7 @@ const DashboardPage = () => {
                       </td>
 
                       <td className="p-2">
-                        <Link to={`/order/${order._id}`}>
+                        <Link to={`/admin/order/${order._id}`}>
                           <button className="px-4 py-2 text-sm font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition cursor-pointer">
                             Details
                           </button>
