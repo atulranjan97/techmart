@@ -9,18 +9,14 @@ import Message from "../components/Message.jsx";
 import Paginate from "../components/Paginate.jsx";
 import ProductCarousel from "../components/ProductCarousel.jsx";
 
-const HomePage = () => {
+const ProductsPage = () => {
   const { pageNumber, keyword } = useParams();
   const { data, isLoading, error } = useGetProductsQuery({
     keyword,
     pageNumber,
   });
 
-  const {
-    data: getTopProducts,
-    isLoading: loadingTopProducts,
-    error: errorTopProducts,
-  } = useGetTopProductsQuery();
+  const { data: getTopProducts, isLoading: loadingTopProducts, error: errorTopProducts } = useGetTopProductsQuery();
 
   return (
     <div className="max-w-7xl mx-auto mb-3 md:px-4 lg:py-7">
@@ -32,20 +28,13 @@ const HomePage = () => {
         </Message>
       ) : (
         <>
-          {!keyword && (
+          {/* {!keyword && (
             <>
-              {/* Carousel */}
-              {isLoading ? (
-                <Loader />
-              ) : (
-                <ProductCarousel products={getTopProducts} />
-              )}
-
-              <h1 className="font-bold text-xl md:text-3xl my-6 text-gray-500 text-center lg:text-left">
-                Latest Products
-              </h1>
+            <h1 className="font-bold text-xl md:text-3xl my-6 text-gray-500 text-center lg:text-left">
+              Latest Products
+            </h1>
             </>
-          )}
+          )} */}
 
           {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 w-fit mx-auto"> */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 my-3 w-fit mx-auto">
@@ -64,4 +53,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ProductsPage;

@@ -16,7 +16,8 @@ import App from "./App.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import ProductPage from "./pages/ProductPage.jsx";
+import ProductsPage from "./pages/ProductsPage.jsx";
+import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
 import store from "./store.js";
 import CartPage from "./pages/CartPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -34,24 +35,27 @@ import UserEditPage from "./pages/admin/UserEditPage.jsx";
 import AdminPage from "./pages/admin/AdminPage.jsx";
 import DashboardPage from "./pages/admin/DashboardPage.jsx";
 import { ToastContainer } from "react-toastify";
+import ContactPage from "./pages/ContactPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* Public + Protected Routes (With Header/Footer via App.jsx) */}
       <Route path="/" element={<App />}>
+        {/* Routes With Header/Footer via App.jsx) */}
         {/* public route */}
         <Route path="/" index={true} element={<HomePage />} />
+        <Route path="/products" index={true} element={<ProductsPage />} />
         <Route path="/search/:keyword" element={<HomePage />} />
         <Route path="/page/:pageNumber" element={<HomePage />} />
         <Route
           path="/search/:keyword/page/:pageNumber"
           element={<HomePage />}
         />
-        <Route path="/products/:id" element={<ProductPage />} />
+        <Route path="/products/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {/* protected route */}
         <Route path="" element={<PrivateRoute />}>
@@ -63,7 +67,7 @@ const router = createBrowserRouter(
         </Route>
       </Route>
 
-      {/* Admin Routes (NO App wrapper → No Header/Footer) */}
+      {/* Admin Routes */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminPage />}>
           <Route index={true} element={<DashboardPage />} />
@@ -80,7 +84,6 @@ const router = createBrowserRouter(
           <Route path="/admin/order/:id" element={<OrderPage />} />
         </Route>
       </Route>
-
     </>,
   ),
 );

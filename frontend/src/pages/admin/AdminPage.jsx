@@ -88,9 +88,12 @@ const AdminPage = () => {
           >
             Orders
           </Link>
-          {/* <button className="block px-4 py-2 rounded hover:bg-techmart-dark transition">
-            Settings
-          </button> */}
+          <button
+            onClick={logoutHandler}
+            className="hidden lg:block bg-red-600 text-white px-4 py-2 ml-3 rounded hover:bg-red-700 cursor-pointer"
+          >
+            Logout
+          </button>
         </nav>
       </aside>
 
@@ -110,13 +113,13 @@ const AdminPage = () => {
           <div className="flex gap-2">
             <Link
               to={"/"}
-              className="bg-techmart-color text-white px-3 py-1 rounded hover:bg-techmart-dark cursor-pointer"
+              className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 cursor-pointer"
             >
               View Store
             </Link>
             <button
               onClick={logoutHandler}
-              className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 cursor-pointer"
+              className="lg:hidden bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 cursor-pointer"
             >
               Logout
             </button>

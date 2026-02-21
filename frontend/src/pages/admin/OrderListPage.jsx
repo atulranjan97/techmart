@@ -31,9 +31,7 @@ const OrderListPage = () => {
               >
                 <div className="flex justify-between">
                   <span className="text-gray-500">ID</span>
-                  <span className="font-medium">
-                    {order._id.slice(-6)}
-                  </span>
+                  <span className="font-medium">{order._id.slice(-6)}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -43,9 +41,7 @@ const OrderListPage = () => {
 
                 <div className="flex justify-between">
                   <span className="text-gray-500">Date</span>
-                  <span className="">
-                    {order.createdAt.substring(0, 10)}
-                  </span>
+                  <span className="">{order.createdAt.substring(0, 10)}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -65,7 +61,9 @@ const OrderListPage = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Delivered</span>
                   <span className="font-semibold">
-                    {order.isDelivered ? order.deliveredAt.substring(0, 10) : "Pending"}
+                    {order.isDelivered
+                      ? order.deliveredAt.substring(0, 10)
+                      : "Pending"}
                   </span>
                 </div>
 
@@ -79,91 +77,83 @@ const OrderListPage = () => {
           </div>
 
           {/* ================= DESKTOP TABLE ================= */}
-          <div className="hidden lg:block bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-gray-100 text-sm">
-                  <tr>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Id
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      User
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Date
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Total
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Paid
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Delivered
-                    </th>
-                    <th className="p-3 font-semibold text-gray-700">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {orders.map((order) => (
-                    <tr
-                      key={order._id}
-                      className="border-t border-gray-300 hover:bg-gray-100 transition"
-                    >
-                      <td className="p-2 text-sm text-gray-800 truncate">
-                        {order._id}
-                      </td>
-                      <td className="p-2 text-sm font-semibold text-gray-800 truncate">
-                        {order.user.name}
-                      </td>
-                      <td className="p-2 text-sm text-gray-800 truncate">
-                        {order.createdAt.substring(0, 10)}
-                      </td>
-                      <td className="p-2 text-sm text-gray-800 truncate">
-                        ₹{order.totalPrice.toLocaleString("en-IN")}
-                      </td>
-
-                      <td className="p-2">
-                        <span
-                          className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                            order.isPaid
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {order.isPaid ? order.paidAt.substring(0, 10) : "Not Paid"}
-                        </span>
-                      </td>
-
-                      <td className="p-3">
-                        <span
-                          className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                            order.isDelivered
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
-                          }`}
-                        >
-                          {order.isDelivered ? order.deliveredAt.substring(0, 10) : "Pending"}
-                        </span>
-
-                      </td>
-
-                      <td className="p-2">
-                        <Link to={`/admin/order/${order._id}`}>
-                          <button className="px-4 py-2 text-sm font-semibold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition cursor-pointer">
-                            Details
-                          </button>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="hidden lg:flex flex-col bg-white shadow-md rounded-xl overflow-hidden text-sm">
+            {/* HEADER */}
+            <div
+              className="grid 
+    grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.2fr)_140px]
+    gap-4 bg-gray-100 p-3 font-semibold text-gray-700 border-b border-gray-300"
+            >
+              <span className="truncate">Id</span>
+              <span className="truncate">User</span>
+              <span className="whitespace-nowrap">Date</span>
+              <span>Total</span>
+              <span>Paid</span>
+              <span>Delivered</span>
+              <span className="text-center">Actions</span>
             </div>
+
+            {orders.map((order) => (
+              <div
+                key={order._id}
+                className="grid 
+        grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.2fr)_140px]
+        gap-4 items-center p-3 border-b border-gray-300 hover:bg-gray-100"
+              >
+                <span className="min-w-0 truncate">
+                  {order._id.slice(-6)}...
+                </span>
+
+                <span className="min-w-0 truncate font-medium">
+                  {order.user.name}
+                </span>
+
+                {/* FIXED DATE */}
+                <span className="whitespace-nowrap">
+                  {order.createdAt.substring(0, 10)}
+                </span>
+
+                <span className="whitespace-nowrap">
+                  ₹{order.totalPrice.toLocaleString("en-IN")}
+                </span>
+
+                {/* Paid */}
+                <span className="whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      order.isPaid
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {order.isPaid ? order.paidAt.substring(0, 10) : "Not Paid"}
+                  </span>
+                </span>
+
+                {/* Delivered */}
+                <span className="whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      order.isDelivered
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {order.isDelivered
+                      ? order.deliveredAt.substring(0, 10)
+                      : "Pending"}
+                  </span>
+                </span>
+
+                <div className="flex justify-center shrink-0">
+                  <Link to={`/admin/order/${order._id}`}>
+                    <button className="px-3 py-1.5 bg-gray-600 text-white rounded-md hover:bg-gray-700 whitespace-nowrap">
+                      Details
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </>
       )}

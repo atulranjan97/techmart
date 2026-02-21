@@ -17,7 +17,7 @@ import {
 import { addToCart } from "../slices/cartSlice";
 import CustomSelect from "../components/CustomSelect";
 
-const ProductPage = () => {
+const ProductDetailsPage = () => {
   const { id: productId } = useParams();
 
   const dispatch = useDispatch();
@@ -450,4 +450,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductDetailsPage;

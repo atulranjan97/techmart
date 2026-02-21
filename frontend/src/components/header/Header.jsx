@@ -61,30 +61,21 @@ const Header = () => {
               <Link to={"/"}>TechMart</Link>
             </div>
 
-            {/* Search (Mobile) */}
-            {/* <CiSearch
-              className="lg:hidden text-white size-6"
-              onClick={() => setIsSearchOpen(curr => !curr)}
-            /> */}
-
-            {/* Search (Desktop) */}
-            {/* <SearchBox className={"hidden lg:block"} /> */}
 
             {/* Middle - Links (Desktop) */}
-            {/* <div className="hidden lg:flex space-x-8 text-white">
+            <div className="hidden lg:flex space-x-8 text-white">
             <Link to={"/"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Home</Link>
-            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
-            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Deals</Link>
-            <Link to={"#"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
-          </div> */}
+            <Link to={"/products"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
+            <Link to={"/contact"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
+          </div>
 
             {/* Right - Auth (Mobile) */}
             <div className="flex items-center gap-3 lg:gap-4 mr-3">
               {/* Search (Desktop) */}
-              <SearchBox className={"hidden lg:block"} />
+              <SearchBox className={"hidden md:block"} />
               {/* Search (Mobile) */}
               <CiSearch
-                className="lg:hidden text-white size-6"
+                className="md:hidden text-white size-6"
                 onClick={() => setIsSearchOpen((curr) => !curr)}
               />
               {userInfo ? (
@@ -152,13 +143,10 @@ const Header = () => {
           <Link to={"/"}>
             <li>Home</li>
           </Link>
-          <Link to={"#"}>
+          <Link to={"/products"}>
             <li>Products</li>
           </Link>
-          <Link to={"#"}>
-            <li>Deals</li>
-          </Link>
-          <Link to={"#"}>
+          <Link to={"/contact"}>
             <li>Contacts</li>
           </Link>
         </ul>
