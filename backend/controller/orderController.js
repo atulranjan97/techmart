@@ -100,7 +100,6 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     // check the correct amount was paid
     // const paidCorrectAmount = ((order.totalPrice)).toString() === value;
     const paidCorrectAmount = (Number(order.totalPrice) / 90.42).toFixed(2) === value;
-    if (!paidCorrectAmount) throw new Error('Incorrect amount paid');
 
     order.isPaid = true;
     order.paidAt = Date.now();
@@ -112,6 +111,20 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
+
+    // change stock count of products after successful order payment
+    const updates = order.orderItems.map((item) => ({_id: item.product, qty: item.qty}));
+    await Product.bulkWrite(
+      updates.map((item) => ({
+        updateOne: {
+          filter: {
+            _id: item._id,
+            countInStock: {$gte: item.qty},
+          },
+          update: {$inc: {countInStock: -item.qty}}
+        }
+      }))
+    )
 
     res.json(updatedOrder);
   } else {
