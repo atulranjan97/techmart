@@ -1,10 +1,9 @@
 // Local Modules
-import Order from "../models/orderModel.js"
-import Product from "../models/productModel.js"
+import Order from "../models/orderModel.js";
+import Product from "../models/productModel.js";
 import { calcPrices } from "../utils/calcPrices.js";
 import { verifyPayPalPayment, checkIfNewTransaction } from "../utils/paypal.js";
 import asyncHandler from "../middleware/asyncHandler.js";
-
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -14,7 +13,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
   if (orderItems && orderItems.length === 0) {
     res.status(400);
-    throw new Error('No order items');
+    throw new Error("No order items");
   } else {
     // get the ordered items from our database
     const itemsFromDB = await Product.find({
@@ -24,7 +23,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     // map over the order items and use the price from our items from database
     const dbOrderItems = orderItems.map((itemFromClient) => {
       const matchingItemFromDB = itemsFromDB.find(
-        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
+        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id,
       );
       return {
         ...itemFromClient,
@@ -35,8 +34,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     // calculate prices
-    const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
-      calcPrices(dbOrderItems);
+    const { itemsPrice, taxPrice, shippingPrice, totalPrice, usdPrice } =
+      await calcPrices(dbOrderItems);
 
     const order = new Order({
       orderItems: dbOrderItems,
@@ -47,6 +46,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
+      usdPrice,
     });
 
     const createdOrder = await order.save();
@@ -55,51 +55,50 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Get logged in user orders
 // @route   GET /api/orders/mine
 // @access  Private
 const getMyOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({ user: req.user._id });
-    res.status(200).json(orders);
-})
-
+  const orders = await Order.find({ user: req.user._id });
+  res.status(200).json(orders);
+});
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
 // @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id).populate('user', 'name email');
-    // Find an order by its ID and populate the 'user' field.
-    // Instead of returning just the user ObjectId, populate() fetches the user's name and email from the User collection.
-    // This keeps the response secure (no sensitive fields) and more useful.
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email",
+  );
+  // Find an order by its ID and populate the 'user' field.
+  // Instead of returning just the user ObjectId, populate() fetches the user's name and email from the User collection.
+  // This keeps the response secure (no sensitive fields) and more useful.
 
-    if (order) {
-        res.status(200).json(order)
-    } else {
-        res.status(404);
-        throw new Error('Order not found');
-    }
-})
-
+  if (order) {
+    res.status(200).json(order);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
 
 // @desc    Update order to paid
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
   const { verified, value } = await verifyPayPalPayment(req.body.id);
-  if (!verified) throw new Error('Payment not verified');
+  if (!verified) throw new Error("Payment not verified");
 
   // check if this transaction has been used before
   const isNewTransaction = await checkIfNewTransaction(Order, req.body.id);
-  if (!isNewTransaction) throw new Error('Transaction has been used before');
+  if (!isNewTransaction) throw new Error("Transaction has been used before");
 
   const order = await Order.findById(req.params.id);
 
   if (order) {
     // check the correct amount was paid
-    // const paidCorrectAmount = ((order.totalPrice)).toString() === value;
-    const paidCorrectAmount = (Number(order.totalPrice) / 90.42).toFixed(2) === value;
+    const paidCorrectAmount = (order.usdPrice).toString() === value;
 
     order.isPaid = true;
     order.paidAt = Date.now();
@@ -113,72 +112,76 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
 
     // change stock count of products after successful order payment
-    const updates = order.orderItems.map((item) => ({_id: item.product, qty: item.qty}));
+    const updates = order.orderItems.map((item) => ({
+      _id: item.product,
+      qty: item.qty,
+    }));
     await Product.bulkWrite(
       updates.map((item) => ({
         updateOne: {
           filter: {
             _id: item._id,
-            countInStock: {$gte: item.qty},
+            countInStock: { $gte: item.qty },
           },
-          update: {$inc: {countInStock: -item.qty}}
-        }
-      }))
-    )
+          update: { $inc: { countInStock: -item.qty } },
+        },
+      })),
+    );
 
     res.json(updatedOrder);
   } else {
     res.status(404);
-    throw new Error('Order not found');
+    throw new Error("Order not found");
   }
 });
-
 
 // @desc    Update order to delivered
 // @route   PUT /api/orders/:id/deliver
 // @access  Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
-    if (order) {
-        // update isDelivered to true
-        order.isDelivered = true;
-        // set deliveredAt field
-        order.deliveredAt = Date.now();
+  if (order) {
+    // update isDelivered to true
+    order.isDelivered = true;
+    // set deliveredAt field
+    order.deliveredAt = Date.now();
 
-        const updatedOrder = await order.save();
+    const updatedOrder = await order.save();
 
-        res.status(200).json(updatedOrder);
-    } else {
-        res.status(404);
-        throw new Error('Order not found');
-    }
-})
-
+    res.status(200).json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
 
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({}).populate('user', 'id name');
-    res.status(200).json(orders);
-})
+  const orders = await Order.find({}).populate("user", "id name");
+  res.status(200).json(orders);
+});
 
 // @desc    Get recent orders
 // @route   GET /api/orders/recent
 // @access  Private/Admin
 const getRecentOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({}).populate('user', 'id name').limit(5).sort({createdAt: -1});
-    res.status(200).json(orders);
-})
+  const orders = await Order.find({})
+    .populate("user", "id name")
+    .limit(5)
+    .sort({ createdAt: -1 });
+  res.status(200).json(orders);
+});
 
 
 export {
-    addOrderItems,
-    getMyOrders,
-    getOrderById,
-    updateOrderToPaid,
-    updateOrderToDelivered,
-    getOrders,
-    getRecentOrders
+  addOrderItems,
+  getMyOrders,
+  getOrderById,
+  updateOrderToPaid,
+  updateOrderToDelivered,
+  getOrders,
+  getRecentOrders,
 };

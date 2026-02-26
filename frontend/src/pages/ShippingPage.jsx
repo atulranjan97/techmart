@@ -2,13 +2,18 @@
 import { useState, useEffect } from "react";
 // External Module
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+  useLocation,
+  redirect,
+} from "react-router-dom";
 // Custom Module
 import { saveShippingAddress } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingPage = () => {
-  const {cartItems, shippingAddress} = useSelector((state) => state.cart);
+  const { cartItems, shippingAddress } = useSelector((state) => state.cart);
 
   const [address, setAddress] = useState(shippingAddress?.address || "");
   const [city, setCity] = useState(shippingAddress?.city || "");
@@ -19,33 +24,28 @@ const ShippingPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const qty = searchParams.get("qty");
-  console.log(id, qty)
+  const redirect = searchParams.get("redirect");
 
   useEffect(() => {
-    // if (!cartItems.length) {
-    //   navigate('/cart');
-    // } 
-    if (!id && !qty) {
-      if (!cartItems.length) {
-        navigate('/cart')
-      }
+    if (redirect) {
+      return;
+    } else if (!cartItems.length) {
+      navigate("/cart");
     }
-  }, [cartItems.length, navigate])
+  }, [cartItems.length, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(saveShippingAddress({ address, city, postalCode, country }));
 
-    if (id && qty) {
-      navigate(`/payment?id=${id}&qty=${qty}`);
-    } else {
+    if (!redirect) {
       navigate(`/payment`);
-    }    
-
+    } else {
+      navigate(`/payment?redirect=${encodeURIComponent(redirect)}`);
+    }
   };
 
   return (
@@ -73,7 +73,7 @@ const ShippingPage = () => {
               required
               onChange={(e) => setAddress(e.target.value)}
               className="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Enter name"
+              placeholder="Enter address"
             />
           </div>
 
@@ -89,7 +89,7 @@ const ShippingPage = () => {
               required
               onChange={(e) => setCity(e.target.value)}
               className="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Enter email"
+              placeholder="Enter city"
             />
           </div>
 
@@ -108,7 +108,7 @@ const ShippingPage = () => {
               required
               onChange={(e) => setPostalCode(e.target.value)}
               className="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Enter password"
+              placeholder="Enter postal code"
             />
           </div>
 
@@ -124,7 +124,7 @@ const ShippingPage = () => {
               required
               onChange={(e) => setCountry(e.target.value)}
               className="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-              placeholder="Enter password"
+              placeholder="Enter country"
             />
           </div>
 

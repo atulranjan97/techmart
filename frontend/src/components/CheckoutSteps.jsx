@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
-const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
+// const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
+const CheckoutSteps = ({ step1, step2, step3, step4, redirect}) => {
   return (
     <nav aria-label="Checkout Steps" className="max-w-sm mx-auto">
       <ol className="flex justify-between text-center text-sm lg:text-md">
         
         <li>
           {step1 ? (
-            <Link to={id ? `/login?id=${id}&qty=${qty}` : `/login`} className="font-medium hover:text-blue-700">
+            // <NavLink to={id ? `/login?id=${id}&qty=${qty}` : `/login`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
+            <NavLink to={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : `/login`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
               Sign In
-            </Link>
+            </NavLink>
           ) : (
             <span className="opacity-50 cursor-not-allowed">
               Sign In
@@ -19,9 +21,10 @@ const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
 
         <li>
           {step2 ? (
-            <Link to={id ? `/shipping?id=${id}&qty=${qty}` : `/shipping`} className="font-medium hover:text-blue-700">
+            // <NavLink to={id ? `/shipping?id=${id}&qty=${qty}` : `/shipping`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
+            <NavLink to={redirect ? `/shipping?redirect=${encodeURIComponent(redirect)}` : `/shipping`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
               Shipping
-            </Link>
+            </NavLink>
           ) : (
             <span className="opacity-50 cursor-not-allowed">
               Shipping
@@ -31,9 +34,10 @@ const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
 
         <li>
           {step3 ? (
-            <Link to={id ? `/payment?id=${id}&qty=${qty}` : `/payment`} className="font-medium hover:text-blue-700">
+            // <NavLink to={id ? `/payment?id=${id}&qty=${qty}` : `/payment`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
+            <NavLink to={redirect ? `/payment?redirect=${encodeURIComponent(redirect)}` : `/payment`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
               Payment
-            </Link>
+            </NavLink>
           ) : (
             <span className="opacity-50 cursor-not-allowed">
               Payment
@@ -43,9 +47,10 @@ const CheckoutSteps = ({ step1, step2, step3, step4, id, qty }) => {
 
         <li>
           {step4 ? (
-            <Link to={id ? `/placeorder?id=${id}&qty=${qty}` : `/placeorder`} className="font-medium hover:text-blue-700">
+            // <NavLink to={id ? `/placeorder?id=${id}&qty=${qty}` : `/placeorder`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
+            <NavLink to={redirect ? `/placeorder?redirect=${encodeURIComponent(redirect)}` : `/placeorder`} className={({isActive}) => `font-medium hover:text-blue-700 ${isActive ? `bg-gray-300 px-2 py-1 rounded-md` : ''}`}>
               Place Order
-            </Link>
+            </NavLink>
           ) : (
             <span className="opacity-50 cursor-not-allowed">
               Place Order

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { logout } from "../../slices/authSlice";
 import { useDispatch, } from "react-redux";
@@ -55,39 +55,43 @@ const AdminPage = () => {
           lg:static lg:translate-x-0
         `}
       >
-        <Link to={"/"}>
+        <Link to={"/admin"}>
           <h2 className="text-2xl font-bold mb-8">Techmart | Admin</h2>
         </Link>
 
         <nav className="space-y-3">
-          <Link
+          <NavLink
             to={"/admin"}
             onClick={() => setSidebarOpen(false)}
-            className="block px-4 py-2 text-lg font-semibold rounded hover:bg-techmart-dark transition"
+            // className="block px-4 py-2 text-lg font-semibold rounded hover:bg-techmart-dark transition border"
+            className={({isActive}) => `block px-4 py-2 text-lg font-semibold rounded ${isActive ? '' : 'hover:bg-techmart-color '}`}
           >
             Dashboard
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/admin/productlist"}
             onClick={() => setSidebarOpen(false)}
-            className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            // className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            className={({isActive}) => `block px-4 py-2 rounded ${isActive ? 'bg-techmart-dark' : 'hover:bg-techmart-dark'}`}
           >
             Products
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/admin/userlist"}
             onClick={() => setSidebarOpen(false)}
-            className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            // className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            className={({isActive}) => `block px-4 py-2 rounded ${isActive ? 'bg-techmart-dark' : 'hover:bg-techmart-dark'}`}
           >
             Users
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/admin/orderlist"}
             onClick={() => setSidebarOpen(false)}
-            className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            // className="block px-4 py-2 rounded hover:bg-techmart-dark transition"
+            className={({isActive}) => `block px-4 py-2 rounded ${isActive ? 'bg-techmart-dark' : 'hover:bg-techmart-dark'}`}
           >
             Orders
-          </Link>
+          </NavLink>
           <button
             onClick={logoutHandler}
             className="hidden lg:block bg-red-600 text-white px-4 py-2 ml-3 rounded hover:bg-red-700 cursor-pointer"

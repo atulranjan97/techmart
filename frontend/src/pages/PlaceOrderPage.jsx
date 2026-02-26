@@ -1,16 +1,22 @@
 // Core
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // External
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 // Custom
 import { useCreateOrderMutation } from "../slices/ordersApiSlice";
-import { usePrepareBuyNowProductQuery } from "../slices/productsApiSlice";
+import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import { clearCartItems } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import calcPrices from "../utils/calcPrices";
 
 const PlaceOrderPage = () => {
   const dispatch = useDispatch();
@@ -22,26 +28,31 @@ const PlaceOrderPage = () => {
     { isLoading: loadingCreateOrder, error: errorCreateOrder },
   ] = useCreateOrderMutation();
 
-  const productId = searchParams.get("id");
+  const { id: productId } = useParams();
   const qty = searchParams.get("qty");
   const isBuyNow = Boolean(productId);
 
-  const {data: buyNowItem, isLoading: loadingBuyNow, error: errorBuyNow, isError: isErrorBuyNow} = usePrepareBuyNowProductQuery({productId, qty}, {skip: !isBuyNow});
+  const {data: buyNowItem, isLoading: loadingBuyNow, error: errorBuyNow, isError: isErrorBuyNow} = useGetProductDetailsQuery(productId, {skip: !isBuyNow});
+
+  const {itemsPrice, shippingPrice, taxPrice, totalPrice} = calcPrices([{...buyNowItem, qty}]);
+  const buyNowItemPrice = {itemsPrice, shippingPrice, taxPrice, totalPrice};
 
   const cart = useSelector((state) => state.cart);
 
-  const checkoutItems = isBuyNow ? buyNowItem?.product || [] : cart.cartItems;
-  const checkoutPriceInfo = isBuyNow ? buyNowItem || {} : cart;
+  const checkoutItems = isBuyNow ? [{...buyNowItem, qty}] : cart.cartItems;
+  const checkoutPriceInfo = isBuyNow ? buyNowItemPrice || {} : cart;
 
   useEffect(() => {
     let redirectPath = null;
 
     if (isBuyNow) {
+      const placeorderPath = `/placeorder/${productId}?qty=${qty}`;
+
       if (!qty || isNaN(qty) || qty < 1) redirectPath = "/";
       else if (!cart.shippingAddress.address)
-        redirectPath = `/shipping?id=${productId}&qty=${qty}`;
+        redirectPath = `/shipping?redirect=${encodeURIComponent(placeorderPath)}`
       else if (!cart.paymentMethod)
-        redirectPath = `/payment?id=${productId}&qty=${qty}`;
+        redirectPath = `/payment?redirect=${encodeURIComponent(placeorderPath)}`;
     } else {
       if (!cart.shippingAddress.address) redirectPath = "/shipping";
       else if (!cart.paymentMethod) redirectPath = "/payment";
@@ -66,7 +77,7 @@ const PlaceOrderPage = () => {
       }).unwrap();
 
       if (!isBuyNow) {
-        dispatch(clearCartItems());   // clearing the cart items triggers re-render of this component because it has subscribed the cart state of redux
+        dispatch(clearCartItems()); // clearing the cart items triggers re-render of this component because it has subscribed the cart state of redux
       }
       navigate(`/order/${res._id}`);
     } catch (error) {
@@ -78,7 +89,7 @@ const PlaceOrderPage = () => {
     <div className="max-w-7xl mx-auto px-2 lg:px-4 my-4">
       {/* Steps */}
       <div className="mb-4">
-        <CheckoutSteps step1 step2 step3 step4 id={productId} qty={qty} />
+        <CheckoutSteps step1 step2 step3 step4 redirect={isBuyNow ? `/placeorder/${productId}?qty=${qty}` : "/placeorder"} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -95,8 +106,8 @@ const PlaceOrderPage = () => {
               <Link
                 to={
                   isBuyNow
-                    ? `/shipping?id=${productId}&qty=${qty}`
-                    : "/shipping"
+                    ? `/shipping?redirect=/placeorder/${productId}?qty=${qty}`
+                    : "/shipping?redirect=/placeorder"
                 }
                 className="text-xs font-semibold text-techmart-color hover:text-black hover:underline"
               >

@@ -12,9 +12,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const qty = searchParams.get("qty");
-  console.log(id, qty)
+  const redirect = searchParams.get("redirect");
 
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
@@ -23,25 +21,25 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (!Object.keys(shippingAddress).length) {
-        navigate('/shipping');
+      navigate("/shipping");
     }
   }, [shippingAddress, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    
-    if (id && qty) {
-      navigate(`/placeorder?id=${id}?qty=${qty}`);
+    if (redirect) {
+      navigate(redirect);
     } else {
       navigate('/placeorder');
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-y-4 max-w-7xl p-6 mx-auto">
       <div className="w-full mb-3 mx-auto">
-        <CheckoutSteps step1 step2 step3 />
+        {/* <CheckoutSteps step1 step2 step3 id={id} qty={qty} /> */}
+        <CheckoutSteps step1 step2 step3 redirect={redirect}/>
       </div>
       {/* is as same as <CheckoutSteps step1={true} step2={true} /> */}
 
@@ -58,7 +56,7 @@ const PaymentPage = () => {
               type="radio"
               id="Payment_method"
               name="paymentMethod"
-              value={'Paypal'}
+              value={"Paypal"}
               checked
               onChange={(e) => setPaymentMethod(e.target.value)}
               placeholder="Enter name"

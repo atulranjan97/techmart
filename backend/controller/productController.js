@@ -37,18 +37,6 @@ const getProductById = asyncHandler(async (req, res) => {
   throw new Error("Resource not found");
 });
 
-// const getProductById = asyncHandler(async (req, res) => {
-//     if(mongoose.Types.ObjectId.isValid(req.params.id)) {
-//         const product = await Product.findById(req.params.id);
-
-//         if(product) {
-//             return res.json(product);
-//         }
-//     }
-
-//     res.status(404);
-//     throw new Error('Resource not found');
-// })
 
 // @desc    Create a product
 // @route   POST /api/products
@@ -161,52 +149,9 @@ const getTopProducts = asyncHandler(async (req, res) => {
   res.status(200).json(products);
 })
 
-// @desc    Fetch a product and calculate the prices
-// @route   GET /api/products/checkout
-// @access  Public
-const prepareCheckout = asyncHandler(async (req, res) => {
-  const { productId, qty } = req.query;
-
-  if (!productId || !qty) {
-    res.status(400);
-    throw new Error("ProductId and qty required");
-  }
-
-  if (isNaN(qty) || qty < 1) {
-    res.status(400);
-    throw new Error("Invalid quantitiy");
-  }
-
-  const product = await Product.findById(productId).lean();
-
-  if (!product) {
-    res.status(404);
-    throw new Error("Resourse not found");
-  }
-
-  if (qty > product.countInStock) {
-    res.status(400);
-    throw new Error("Requested quantity exceeds available stock");
-  }
-
-  // Price calculations
-  const {itemsPrice, shippingPrice, taxPrice, totalPrice} = calcPrices([{...product, qty}]);
-
-  const checkoutSummary = {
-    product: [{ ...product, qty }],
-    itemsPrice,
-    shippingPrice,
-    taxPrice,
-    totalPrice,
-  };
-
-  res.status(200).json(checkoutSummary);
-});
-
 export {
   getProducts,
   getProductById,
-  prepareCheckout,
   createProduct,
   updateProduct,
   deleteProduct,

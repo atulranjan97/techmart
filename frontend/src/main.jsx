@@ -41,47 +41,53 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
-        {/* Routes With Header/Footer via App.jsx) */}
         {/* public route */}
-        <Route path="/" index={true} element={<HomePage />} />
-        <Route path="/products" index={true} element={<ProductsPage />} />
-        <Route path="/search/:keyword" element={<HomePage />} />
-        <Route path="/page/:pageNumber" element={<HomePage />} />
-        <Route
-          path="/search/:keyword/page/:pageNumber"
-          element={<HomePage />}
-        />
-        <Route path="/products/:id" element={<ProductDetailsPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route index element={<HomePage />} />
+        <Route path="search/:keyword" element={<HomePage />} />
+        <Route path="page/:pageNumber" element={<HomePage />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="search/:keyword/page/:pageNumber" element={<HomePage />} />
+        <Route path="products/:id" element={<ProductDetailsPage />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="contact" element={<ContactPage />} />
 
         {/* protected route */}
-        <Route path="" element={<PrivateRoute />}>
-          <Route path="/shipping" element={<ShippingPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/placeorder" element={<PlaceOrderPage />} />
-          <Route path="/order/:id" element={<OrderPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="shipping" element={<ShippingPage />} />
+          <Route path="payment" element={<PaymentPage />} />
+
+          <Route path="placeorder">
+            <Route index element={<PlaceOrderPage />} />
+            <Route path=":id" element={<PlaceOrderPage />} />
+          </Route>
+
+          <Route path="order/:id" element={<OrderPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>
 
       {/* Admin Routes */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminPage />}>
-          <Route index={true} element={<DashboardPage />} />
-          <Route path="/admin/orderlist" element={<OrderListPage />} />
-          <Route path="/admin/productlist" element={<ProductListPage />} />
-          <Route
-            path="/admin/productlist/:pageNumber"
-            element={<ProductListPage />}
-          />
-          <Route path="/admin/product/create" element={<ProductFormPage />} />
-          <Route path="/admin/product/:id/edit" element={<ProductFormPage />} />
-          <Route path="/admin/userlist" element={<UserListPage />} />
-          <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
-          <Route path="/admin/order/:id" element={<OrderPage />} />
+          <Route index element={<DashboardPage />} />
+
+          <Route path="orderlist" element={<OrderListPage />} />
+
+          <Route path="productlist">
+            <Route index element={<ProductListPage />} />
+            <Route path=":pageNumber" element={<ProductListPage />} />
+          </Route>
+
+          <Route path="product">
+            <Route path="create" element={<ProductFormPage />} />
+            <Route path=":id/edit" element={<ProductFormPage />} />
+          </Route>
+
+          <Route path="userlist" element={<UserListPage />} />
+          <Route path="user/:id/edit" element={<UserEditPage />} />
+          <Route path="order/:id" element={<OrderPage />} />
         </Route>
       </Route>
     </>,

@@ -14,7 +14,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { cartItems, shippingAddress, itemsPrice } = useSelector((state) => state.cart);
+  const { cartItems, shippingAddress, paymentMethod, itemsPrice } = useSelector(
+    (state) => state.cart,
+  );
   const totalQty = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   const addToCartHandler = async (product, qty) => {
@@ -27,14 +29,30 @@ const CartPage = () => {
 
   const checkoutHandler = () => {
     if (cartItems.length) {
-      const { address, city, postalCode, country} = shippingAddress;
-      if (address && city && postalCode && country) {
-        navigate("/placeorder");
+      const { address, city, postalCode, country } = shippingAddress;
+
+      // if (address && city && postalCode && country) {
+      //   navigate("/login?redirect=/placeorder");
+      // } else if () {
+      //   navigate("/login?redi")
+      // } else {
+      //   navigate("/login?redirect=/shipping");
+      // }
+      let redirectPath = null;
+      if (!address && !city && !postalCode && !country) {
+        redirectPath = "/login?redirect=/shipping";
+      } else if (!paymentMethod) {
+        redirectPath = "/login?redirect=/payment";
       } else {
-        navigate("/login?redirect=/shipping");
+        redirectPath = "/login?redirect=/placeorder";
+      }
+
+      if (redirectPath) {
+        navigate(redirectPath);
+        return;
       }
     } else {
-      toast.error('Your cart is empty. Add items to continue')
+      toast.error("Your cart is empty. Add items to continue");
     }
   };
 
@@ -70,7 +88,9 @@ const CartPage = () => {
                     <Link to={`/products/${item._id}`}>
                       <p className="text-sm line-clamp-2">{item.name}</p>
                     </Link>
-                    <p className="font-semibold mt-1">₹ {item.price.toLocaleString("en-IN")}</p>
+                    <p className="font-semibold mt-1">
+                      ₹ {item.price.toLocaleString("en-IN")}
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between mt-3">
@@ -120,7 +140,7 @@ const CartPage = () => {
 
           <button
             disabled={!cartItems.length}
-            className={`w-full bg-techmart-dark text-white py-2 rounded-md ${(!cartItems.length) ? "disabled:opacity-50 disabled:cursor-not-allowed" : "cursor-pointer"}`}
+            className={`w-full bg-techmart-dark text-white py-2 rounded-md ${!cartItems.length ? "disabled:opacity-50 disabled:cursor-not-allowed" : "cursor-pointer"}`}
             onClick={checkoutHandler}
           >
             Checkout

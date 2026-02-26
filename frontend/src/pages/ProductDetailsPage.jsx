@@ -33,12 +33,11 @@ const ProductDetailsPage = () => {
     refetch,
     error,
   } = useGetProductDetailsQuery(productId);
-  console.log(product);
 
   const [createReview, { isLoading: loadingProductReview }] =
     useCreateReviewMutation();
 
-  const { cartItems } = useSelector((state) => state.cart);
+  const { cartItems, shippingAddress } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
 
   const addToCartHandler = async () => {
@@ -59,7 +58,7 @@ const ProductDetailsPage = () => {
   };
 
   const checkoutHandler = async () => {
-    navigate(`/placeorder?id=${product._id}&qty=${qty}`);
+    navigate(`/login?redirect=/placeorder/${product._id}?qty=${qty}`)
   };
 
   const submitHandler = async (e) => {
@@ -239,7 +238,7 @@ const ProductDetailsPage = () => {
                       <div className="flex flex-col sm:flex-row gap-3">
                         <button
                           onClick={addToCartHandler}
-                          className="flex-1 px-6 py-3 bg-techmart-color text-white rounded-lg hover:bg-techmart-dark transition-all transform hover:scale-105 font-medium flex items-center justify-center gap-2"
+                          className="flex-1 px-6 py-3 bg-techmart-color text-white rounded-lg hover:bg-techmart-dark transition-all transform hover:scale-105 font-medium flex items-center justify-center gap-2 cursor-pointer"
                         >
                           Add to Cart
                         </button>
@@ -250,7 +249,7 @@ const ProductDetailsPage = () => {
                           className={`flex-1 px-6 py-3 border-2 border-techmart-color text-techmart-color rounded-lg hover:bg-techmart-color hover:text-white transition-all font-medium flex items-center justify-center gap-2 ${
                             product.countInStock === 0
                               ? "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-techmart-color"
-                              : ""
+                              : "cursor-pointer"
                           }`}
                         >
                           Buy Now

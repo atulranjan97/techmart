@@ -3,7 +3,6 @@ const router = express.Router();
 import {
   getProducts,
   getProductById,
-  prepareCheckout,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -16,7 +15,6 @@ import checkObjectId from "../middleware/checkObjectId.js";
 // Static Routes
 router.route("/").get(getProducts).post(protect, admin, createProduct);
 router.route("/top").get(getTopProducts);  
-router.route("/checkout").get(prepareCheckout);
 
 
 // Nested Routes

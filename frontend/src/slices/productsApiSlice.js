@@ -22,12 +22,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5, // It controls how long cached data survives after the UI stops using it.
     }),
-    prepareBuyNowProduct: builder.query({
-      query: ({ productId, qty }) => ({
-        url: `${PRODUCTS_URL}/checkout`, // /api/products/checkout
-        params: {productId, qty},
-      }),
-    }),
     createProduct: builder.mutation({
       query: (data) => ({
         url: PRODUCTS_URL,
@@ -79,7 +73,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetProductsQuery,
   useGetProductDetailsQuery,
-  usePrepareBuyNowProductQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useUploadProductImageMutation,

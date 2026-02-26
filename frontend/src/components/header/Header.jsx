@@ -158,7 +158,7 @@ const Header = () => {
             <li>Profile</li>
           </Link>
 
-          <button className="w-fit" onClick={logoutHandler}>
+          <button className="flex" onClick={logoutHandler}>
             Sign Out
           </button>
         </ul>

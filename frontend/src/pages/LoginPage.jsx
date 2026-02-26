@@ -27,7 +27,6 @@ const LoginPage = () => {
   const { search } = useLocation();
   const sp = new URLSearchParams(search); // sp for search params
   const redirect = sp.get("redirect") || "/";
-  console.log(redirect);
 
   // http://localhost:3000/login?redirect=/shipping
   // console.log('http://localhost:3000/login?redirect=/shipping');
@@ -93,7 +92,7 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          {/* <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2">
               <input type="checkbox" className="rounded" />
               Remember me
@@ -101,11 +100,11 @@ const LoginPage = () => {
             <a href="#" className="text-black font-medium">
               Forgot password?
             </a>
-          </div>
+          </div> */}
 
           <button
             type="submit"
-            className="w-full bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition"
+            className="w-full bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition cursor-pointer"
           >
             Sign in
           </button>

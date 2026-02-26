@@ -1,8 +1,10 @@
+import { usdConversion } from "./usdConversion.js";
+
 function addDecimals(num) {
   return (Math.round(num * 100) / 100).toFixed(2);
 }
 
-function calcPrices(orderItems) {
+async function calcPrices(orderItems) {
   // Calculate the items price
   const itemsPrice = addDecimals(
     orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
@@ -17,7 +19,10 @@ function calcPrices(orderItems) {
     Number(shippingPrice) +
     Number(taxPrice)
   ).toFixed(2);
-  return { itemsPrice, shippingPrice, taxPrice, totalPrice };
+  // Calculate USD conversion of total price
+  const usdPrice = await usdConversion(Number(totalPrice));
+
+  return { itemsPrice, shippingPrice, taxPrice, totalPrice, usdPrice };
 }
 
 export { calcPrices };

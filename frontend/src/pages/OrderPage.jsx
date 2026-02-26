@@ -10,7 +10,7 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
-  useDeliverOrderMutation
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -27,7 +27,8 @@ const OrderPage = () => {
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   // We already have an isLoading from `useGetOrderDetailsQuery`, so to avoid name clash we rename isLoading from `usePayOrderMutation` to loadingPay
 
-  const [deliverOrder, { isLoading: loadingDeliver }] = useDeliverOrderMutation();
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
@@ -50,7 +51,7 @@ const OrderPage = () => {
           type: "resetOptions", // Reloads PayPal script with new configuration.
           value: {
             "client-id": paypal.clientId, // load script using this client ID
-            currency: "USD",  // deal currency in USD, since paypal doesn't support INR
+            currency: "USD", // deal currency in USD, since paypal doesn't support INR
           },
         });
         paypalDispatch({ type: "setLoadingStatus", value: "pending" });
@@ -67,14 +68,15 @@ const OrderPage = () => {
     }
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
 
-  function createOrder(data, actions) {
+  async function createOrder(data, actions) {
+    // const value = await usdConversion(Number(order.totalPrice));
     return actions.order
       .create({
         purchase_units: [
           {
             amount: {
               currency_code: "USD",
-              value: (Number(order.totalPrice) / 90.42).toFixed(2),
+              value: Number(order.usdPrice).toFixed(2),
             },
           },
         ],
@@ -87,6 +89,7 @@ const OrderPage = () => {
   function onApprove(data, actions) {
     // actions comes from paypal
     return actions.order.capture().then(async function (details) {
+      console.log(details);
       try {
         await payOrder({ orderId, details }).unwrap();
         refetch();
@@ -111,7 +114,7 @@ const OrderPage = () => {
     try {
       await deliverOrder(orderId);
       refetch();
-      toast.success('Order delivered');
+      toast.success("Order delivered");
     } catch (error) {
       toast.error(err?.data?.message || error.error);
     }
@@ -159,10 +162,12 @@ const OrderPage = () => {
             </h2>
 
             <div className="space-y-2 text-gray-700 mt-3">
+              {/* User name */}
               <p>
                 <span className="font-semibold text-techmart-color">Name:</span>{" "}
                 {order.user.name}
               </p>
+              {/* User email */}
               <p>
                 <span className="font-semibold text-techmart-color">
                   Email:
@@ -313,11 +318,19 @@ const OrderPage = () => {
 
           {/* MARK AS DELIVERED PLACEHOLDER */}
           {loadingDeliver && <Loader />}
-          {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-            <div className="border-t border-gray-300">
-              <button className="mt-6 w-full py-3 rounded-xl bg-gray-600 hover:bg-gray-800 text-white font-semibold transition cursor-pointer" onClick={deliverOrderHandler}>Mark As Delivered</button>
-            </div>
-          )}
+          {userInfo &&
+            userInfo.isAdmin &&
+            order.isPaid &&
+            !order.isDelivered && (
+              <div className="border-t border-gray-300">
+                <button
+                  className="mt-6 w-full py-3 rounded-xl bg-gray-600 hover:bg-gray-800 text-white font-semibold transition cursor-pointer"
+                  onClick={deliverOrderHandler}
+                >
+                  Mark As Delivered
+                </button>
+              </div>
+            )}
 
           {/* Optional CTA */}
           {order.isPaid && order.user._id === userInfo._id && (

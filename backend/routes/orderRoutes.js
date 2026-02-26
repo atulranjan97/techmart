@@ -10,6 +10,7 @@ import {
     updateOrderToDelivered,
     getOrders,
     getRecentOrders,
+    // getOrderUsdAmount,
 } from "../controller/orderController.js";
 import checkObjectId from '../middleware/checkObjectId.js';
 
@@ -22,6 +23,7 @@ router.route('/recent').get(protect, admin, getRecentOrders)
 router.route('/:id').get(protect, checkObjectId, getOrderById);
 router.route('/:id/pay').put(protect, checkObjectId, updateOrderToPaid);
 router.route('/:id/deliver').put(protect, admin, checkObjectId, updateOrderToDelivered);
+// router.get('/:id/usd', protect, getOrderUsdAmount);
 
 
 
