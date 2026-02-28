@@ -19,7 +19,7 @@ const LoginPage = () => {
   // useLoginMutation returns an array with two elements:
   // 1. mutationFunction - function to trigger the mutation
   // 2. resultObject - contains isLoading, isError, etc.
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading: loadingLogin }] = useLoginMutation();
 
   const userInfo = useSelector((state) => state.auth.userInfo);
   // `useSelector` takes in a function, pass in the state and we want the auth part of our state
@@ -102,14 +102,16 @@ const LoginPage = () => {
             </a>
           </div> */}
 
-          <button
-            type="submit"
-            className="w-full bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition cursor-pointer"
-          >
-            Sign in
-          </button>
-
-          {isLoading && <Loader />}
+          {loadingLogin ? (
+            <Loader className="mx-auto" />
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-techmart-color text-white py-2 rounded-md hover:bg-techmart-dark transition cursor-pointer"
+            >
+              Sign in
+            </button>
+          )}
         </form>
 
         <div className="mt-6 text-center text-sm">

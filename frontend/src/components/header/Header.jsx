@@ -1,7 +1,7 @@
 // Core Module
 import { useState } from "react";
 // External Module
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -61,13 +61,33 @@ const Header = () => {
               <Link to={"/"}>TechMart</Link>
             </div>
 
-
             {/* Middle - Links (Desktop) */}
             <div className="hidden lg:flex space-x-8 text-white">
-            <Link to={"/"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Home</Link>
-            <Link to={"/products"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Products</Link>
-            <Link to={"/contact"} className="border border-techmart-color rounded-md hover:border-gray-100 px-2">Contact</Link>
-          </div>
+              <NavLink
+                to={"/"}
+                className={({ isActive }) =>
+                  `border border-techmart-color rounded-md hover:border-gray-100 px-2 ${isActive ? "bg-techmart-dark" : ""}`
+                }
+              >
+                Home
+              </NavLink>
+              <NavLink
+                to={"/products"}
+                className={({ isActive }) =>
+                  `border border-techmart-color rounded-md hover:border-gray-100 px-2 ${isActive ? "bg-techmart-dark" : ""}`
+                }
+              >
+                Products
+              </NavLink>
+              <NavLink
+                to={"/contact"}
+                className={({ isActive }) =>
+                  `border border-techmart-color rounded-md hover:border-gray-100 px-2 ${isActive ? "bg-techmart-dark" : ""}`
+                }
+              >
+                Contact
+              </NavLink>
+            </div>
 
             {/* Right - Auth (Mobile) */}
             <div className="flex items-center gap-3 lg:gap-4 mr-3">
@@ -98,6 +118,8 @@ const Header = () => {
                       title={userInfo.name.trim().split(/\s+/)[0]}
                       items={[
                         { label: "Profile", link: "/profile" },
+                        { label: "Orders", link: "/myorders" },
+                        // { label: "Saved Addresses", link: "/addresses" },
                         { label: "Logout", onClick: logoutHandler },
                       ]}
                     />
@@ -138,27 +160,47 @@ const Header = () => {
         )}
       </nav>
 
+      {/* Mobile Drawer nav links */}
       <MobileDrawer isOpen={isMobileOpen} setIsOpen={setIsMobileOpen}>
-        <ul className="flex flex-col gap-3">
-          <Link to={"/"}>
+        <ul className="flex flex-col gap-2">
+          <NavLink
+            to={"/"}
+            className={({ isActive }) =>
+              `p-2 ${isActive ? "bg-techmart-dark text-white" : ""}`
+            }
+          >
             <li>Home</li>
-          </Link>
-          <Link to={"/products"}>
+          </NavLink>
+          <NavLink
+            to={"/products"}
+            className={({ isActive }) =>
+              `p-2 ${isActive ? "bg-techmart-dark text-white" : ""}`
+            }
+          >
             <li>Products</li>
-          </Link>
-          <Link to={"/contact"}>
+          </NavLink>
+          <NavLink
+            to={"/contact"}
+            className={({ isActive }) =>
+              `p-2 ${isActive ? "bg-techmart-dark text-white" : ""}`
+            }
+          >
             <li>Contacts</li>
-          </Link>
+          </NavLink>
         </ul>
       </MobileDrawer>
 
-      <ProfileDrawer isOpen={isProfileOpen} setIsOpen={setIsProfileOpen}>
+      <ProfileDrawer isOpen={isProfileOpen} setIsOpen={setIsProfileOpen} userInfo={userInfo}>
         <ul className="flex flex-col gap-3">
-          <Link to={"/profile"}>
+          <NavLink to={"/profile"} className={({isActive}) => `pl-2 ${isActive ? 'bg-techmart-color text-white p-2' : ''}`}>
             <li>Profile</li>
-          </Link>
+          </NavLink>
 
-          <button className="flex" onClick={logoutHandler}>
+          <NavLink to={"/myorders"} className={({isActive}) => `pl-2 ${isActive ? 'bg-techmart-color text-white p-2' : ''}`}>
+            <li>Orders</li>
+          </NavLink>
+
+          <button className="flex pl-2" onClick={logoutHandler}>
             Sign Out
           </button>
         </ul>

@@ -1,7 +1,6 @@
 // Local Modules
 import Product from "../models/productModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
-import { calcPrices } from "../utils/calcPrices.js";
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -13,6 +12,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: "i" } }
     : {};
+
   const count = await Product.countDocuments({ ...keyword });
 
   const products = await Product.find({ ...keyword })
@@ -129,7 +129,7 @@ const createProductReview = asyncHandler(async (req, res) => {
     product.reviews.push(review);
 
     product.numReviews = product.reviews.length;
-    product.ratings =
+    product.rating =
       product.reviews.reduce((acc, review) => acc + review.rating, 0) /
       product.reviews.length;
 
@@ -149,6 +149,14 @@ const getTopProducts = asyncHandler(async (req, res) => {
   res.status(200).json(products);
 })
 
+// @desc    Get latest products
+// @route   GET /api/products/latest
+// @access  Public
+const getLatestProducts = asyncHandler(async(req, res) => {
+  const latestProducts = await Product.find({}).limit(6).sort({createdAt: -1});
+  res.status(200).json(latestProducts);
+})
+
 export {
   getProducts,
   getProductById,
@@ -157,4 +165,5 @@ export {
   deleteProduct,
   createProductReview,
   getTopProducts,
+  getLatestProducts,
 };

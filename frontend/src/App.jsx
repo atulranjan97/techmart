@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 // External modules(or packages)
 import { useDispatch } from 'react-redux';
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { logout } from './slices/authSlice';
@@ -29,6 +29,7 @@ const App = () => {
       <Header />
 
       <main className="flex-1">
+        <ScrollRestoration />   
         <Outlet />
       </main>
 
@@ -39,3 +40,4 @@ const App = () => {
 };
 
 export default App;
+// `<ScrollRestoration />` automatically restores or resets scroll position on route navigation in React Router v7 (must be used inside a data router layout).

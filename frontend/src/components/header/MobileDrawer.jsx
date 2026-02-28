@@ -33,15 +33,15 @@ const MobileDrawer = ({isOpen, setIsOpen, children }) => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-3/4 bg-white shadow-lg z-50 
+        className={`fixed top-0 left-0 h-full w-3/4 md:w-1/2 bg-white shadow-lg z-50 
                     transform transition-transform duration-300 ease-in-out
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
                     lg:hidden`}
       >
-        <div className="p-4" onClick={() => setIsOpen(false)}>
+        <div className="py-4" onClick={() => setIsOpen(false)}>
           <button
             onClick={() => setIsOpen(false)}
-            className="mb-4 text-gray-600 border"
+            className="mb-4 text-gray-600 border w-fit "
           >
             <RxCross2 className="size-7" />
           </button>

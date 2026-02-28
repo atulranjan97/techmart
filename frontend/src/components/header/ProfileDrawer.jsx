@@ -26,17 +26,22 @@ const ProfileDrawer = ({ isOpen, setIsOpen, children, userInfo }) => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-3/4 bg-white shadow-lg z-50 
+        className={`fixed top-0 right-0 h-full w-3/4 md:w-1/2 bg-white shadow-lg z-50 
                     transform transition-transform duration-300 ease-in-out
                     ${isOpen ? "translate-x-0" : "translate-x-full"} lg:hidden`}
       >
-        <div className="p-4" onClick={() => setIsOpen(false)}>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="mb-4 text-gray-600 border"
-          >
-            <RxCross2 className="size-7" />
-          </button>
+        <div className="" onClick={() => setIsOpen(false)}>
+          <div className="bg-techmart-dark h-28 flex flex-col justify-between p-2 border-2 border-white">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="border w-fit rounded-2xl border-white"
+            >
+              <RxCross2 className="size-7 text-white" />
+            </button>
+            <h2 className="text-white font-Semibold text-2xl">
+              Hello, {userInfo?.name.trim().split(/\s+/)[0]}
+            </h2>
+          </div>
 
           {children}
         </div>

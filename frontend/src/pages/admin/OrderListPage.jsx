@@ -1,13 +1,16 @@
 import React from "react";
 // External Modules
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 // Custom Modules
 import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
+import Paginate from "../../components/Paginate";
 
 const OrderListPage = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const { page } = useParams();
+
+  const { data, isLoading, error } = useGetOrdersQuery(page);
 
   return (
     <div className="max-w-7xl lg:p-6 mx-auto">
@@ -15,16 +18,16 @@ const OrderListPage = () => {
       {/* <h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">Orders</h1> */}
 
       {isLoading ? (
-        <Loader />
+        <Loader className="mx-auto" />
       ) : error ? (
         <Message variant="danger">{error}</Message>
-      ) : !orders.length ? (
+      ) : !data.orders.length ? (
         <Message>No orders yet</Message>
       ) : (
         <>
           {/* ================= MOBILE VIEW ================= */}
           <div className="space-y-4 lg:hidden">
-            {orders.map((order) => (
+            {data.orders.map((order) => (
               <div
                 key={order._id}
                 className="text-sm md:text-base bg-white rounded-lg shadow p-4 space-y-2 divide-y divide-gray-300"
@@ -93,7 +96,7 @@ const OrderListPage = () => {
               <span className="text-center">Actions</span>
             </div>
 
-            {orders.map((order) => (
+            {data.orders.map((order) => (
               <div
                 key={order._id}
                 className="grid 
@@ -155,6 +158,15 @@ const OrderListPage = () => {
               </div>
             ))}
           </div>
+
+          {!isLoading && (
+            <Paginate
+              page={data.page}
+              pages={data.pages}
+              isAdmin
+              category={"orderlist"}
+            />
+          )}
         </>
       )}
     </div>

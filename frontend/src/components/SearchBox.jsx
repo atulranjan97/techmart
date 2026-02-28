@@ -11,7 +11,7 @@ const SearchBox = ({ isOpen, setIsOpen, className = "" }) => {
     e.preventDefault();
     if (keyword.trim()) {
       setKeyword("");
-      navigate(`/search/${keyword}`);
+      navigate(`/products/search/${keyword}`);
     } else {
       navigate("/");
     }

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../slices/cartSlice";
 import Rating from "./Rating";
@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  console.log(location);
 
   // Subscribe to `cartItems` of cart state
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -66,7 +68,7 @@ const ProductCard = ({ product }) => {
 
           <button
             disabled={product.countInStock === 0}
-            className={`px-2 py-1 md:px-4 md:py-2 bg-techmart-color hover:bg-techmart-dark text-white text-sm md:rounded-sm transition cursor-pointer ${product.countInStock === 0 && "disabled:opacity-50 disabled:cursor-not-allowed"}`}
+            className={`px-2 py-1 md:px-4 md:py-2 bg-techmart-color hover:bg-techmart-dark text-white text-sm md:rounded-sm transition cursor-pointer ${location.pathname === '/' && 'hidden'} ${product.countInStock === 0 && "disabled:opacity-50 disabled:cursor-not-allowed"}`}
             onClick={addToCartHandler}
           >
             Add to Cart

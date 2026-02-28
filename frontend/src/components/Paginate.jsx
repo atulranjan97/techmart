@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Paginate = ({
@@ -6,9 +5,11 @@ const Paginate = ({
   page: currPage,
   isAdmin = false,
   keyword,
+  category, // Eg:- productlist, orderlist, userlist etc
 }) => {
-  const min = currPage - ((currPage % 3) - 1);
-  const max = min + 3;
+  // const min = currPage - ((currPage % 3) - 1);
+  // const max = min + 3;
+  console.log(currPage, totalPages)
   return (
     <div className="flex items-center justify-center gap-2 mt-6">
       {/* Previous */}
@@ -18,9 +19,9 @@ const Paginate = ({
           currPage > 1 &&
           (!isAdmin
             ? keyword
-              ? `/search/${keyword}/page/${currPage - 1}`
-              : `/page/${currPage - 1}`
-            : `/admin/productlist/${currPage - 1}`)
+              ? `/products/search/${keyword}/page/${currPage - 1}`
+              : `/products/page/${currPage - 1}`
+            : `/admin/${category}/${currPage - 1}`)
         }
         className="px-3 py-1 rounded-md border text-sm hover:bg-gray-100"
       >
@@ -33,22 +34,19 @@ const Paginate = ({
           to={
             !isAdmin
               ? keyword
-                ? `/search/${keyword}/page/${x}`
-                : `/page/${x}`
-              : `/admin/productlist/${x}`
+                ? `/products/search/${keyword}/page/${x}`
+                : `/products/page/${x}`
+              : `/admin/${category}/${x}`
           }
-        >
-          <button
-            key={x}
-            className={`px-3 py-1 rounded-md border text-sm transition cursor-pointer
+          key={x}
+          className={`px-3 py-1 rounded-md border text-sm transition cursor-pointer
             ${
               currPage === x
                 ? "bg-techmart-dark text-white border-techmart-color"
                 : "hover:bg-gray-100"
             }`}
-          >
-            {x}
-          </button>
+        >
+          {x}
         </Link>
       ))}
 
@@ -59,9 +57,9 @@ const Paginate = ({
           currPage < totalPages &&
           (!isAdmin
             ? keyword
-              ? `/search/${keyword}/page/${currPage + 1}`
-              : `/page/${currPage + 1}`
-            : `/admin/productlist/${currPage + 1}`)
+              ? `/products/search/${keyword}/page/${currPage + 1}`
+              : `/products/page/${currPage + 1}`
+            : `/admin/${category}/${currPage + 1}`)
         }
         className="px-3 py-1 rounded-md border text-sm hover:bg-gray-100"
       >

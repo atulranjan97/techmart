@@ -36,6 +36,7 @@ import AdminPage from "./pages/admin/AdminPage.jsx";
 import DashboardPage from "./pages/admin/DashboardPage.jsx";
 import { ToastContainer } from "react-toastify";
 import ContactPage from "./pages/ContactPage.jsx";
+import MyOrdersPage from "./pages/MyOrdersPage.jsx"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,9 +44,9 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         {/* public route */}
         <Route index element={<HomePage />} />
-        <Route path="search/:keyword" element={<HomePage />} />
-        <Route path="page/:pageNumber" element={<HomePage />} />
         <Route path="products" element={<ProductsPage />} />
+        <Route path="products/search/:keyword" element={<ProductsPage />} />
+        <Route path="products/page/:pageNumber" element={<ProductsPage />} />
         <Route path="search/:keyword/page/:pageNumber" element={<HomePage />} />
         <Route path="products/:id" element={<ProductDetailsPage />} />
         <Route path="cart" element={<CartPage />} />
@@ -65,6 +66,8 @@ const router = createBrowserRouter(
 
           <Route path="order/:id" element={<OrderPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="myorders" element={<MyOrdersPage />} />
+          {/* <Route path="addresses" element={<AddressesPage />} /> */}
         </Route>
       </Route>
 
@@ -74,6 +77,7 @@ const router = createBrowserRouter(
           <Route index element={<DashboardPage />} />
 
           <Route path="orderlist" element={<OrderListPage />} />
+          <Route path="orderlist/:page" element={<OrderListPage />} />
 
           <Route path="productlist">
             <Route index element={<ProductListPage />} />

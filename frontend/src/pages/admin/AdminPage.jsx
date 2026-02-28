@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { logout } from "../../slices/authSlice";
 import { useDispatch, } from "react-redux";
@@ -132,6 +132,7 @@ const AdminPage = () => {
 
         {/* Content */}
         <main className="p-6 space-y-6">
+          <ScrollRestoration />
           <Outlet />
         </main>
       </div>

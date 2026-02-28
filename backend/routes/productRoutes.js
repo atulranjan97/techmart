@@ -8,6 +8,7 @@ import {
   deleteProduct,
   createProductReview,
   getTopProducts,
+  getLatestProducts,
 } from "../controller/productController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 import checkObjectId from "../middleware/checkObjectId.js";
@@ -15,6 +16,7 @@ import checkObjectId from "../middleware/checkObjectId.js";
 // Static Routes
 router.route("/").get(getProducts).post(protect, admin, createProduct);
 router.route("/top").get(getTopProducts);  
+router.route("/latest").get(getLatestProducts);  
 
 
 // Nested Routes

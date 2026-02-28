@@ -98,7 +98,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
   if (order) {
     // check the correct amount was paid
-    const paidCorrectAmount = (order.usdPrice).toString() === value;
+    const paidCorrectAmount = order.usdPrice.toString() === value;
 
     order.isPaid = true;
     order.paidAt = Date.now();
@@ -116,6 +116,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
       _id: item.product,
       qty: item.qty,
     }));
+
     await Product.bulkWrite(
       updates.map((item) => ({
         updateOne: {
@@ -159,9 +160,24 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
+// const getOrders = asyncHandler(async (req, res) => {
+//   const orders = await Order.find({}).populate("user", "id name");
+//   res.status(200).json(orders);
+// });
 const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate("user", "id name");
-  res.status(200).json(orders);
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const count = await Order.countDocuments();
+
+  const pages = Math.ceil(count / pageSize);
+
+  const orders = await Order.find({})
+    .populate("user", "id name")
+    .limit(pageSize)
+    .skip((page - 1) * pageSize);
+
+  res.status(200).json({ orders, page, pages });
 });
 
 // @desc    Get recent orders
@@ -175,6 +191,23 @@ const getRecentOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+// @desc    Get orders stats
+// @route   GET /api/orders/stats
+// @access  Private/Admin
+const getOrdersStats = asyncHandler(async (req, res) => {
+  const stats = await Order.aggregate([
+    { $match: { isPaid: true } },
+    {
+      $group: {
+        _id: null,
+        totalSales: { $sum: "$totalPrice" },
+        totalOrders: { $sum: 1 },
+      },
+    },
+  ]);
+
+  res.status(200).json(stats[0]);
+});
 
 export {
   addOrderItems,
@@ -184,4 +217,5 @@ export {
   updateOrderToDelivered,
   getOrders,
   getRecentOrders,
+  getOrdersStats,
 };

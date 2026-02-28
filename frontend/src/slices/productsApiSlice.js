@@ -64,6 +64,12 @@ export const productApiSlice = apiSlice.injectEndpoints({
         url: `${PRODUCTS_URL}/top`,
       }),
       keepUnusedDataFor: 5,
+    }),
+    getLatestProduct: builder.query({
+      query: () => ({
+        url: `${PRODUCTS_URL}/latest`,
+      }),
+      keepUnusedDataFor: 5,
     })
   }),
   // any endpoint that we wanna hit that have to do with products will go in here and we can use this builder object which has methods like query, so we can make a query
@@ -79,6 +85,7 @@ export const {
   useDeleteProductMutation,
   useCreateReviewMutation,
   useGetTopProductsQuery,
+  useGetLatestProductQuery,
 } = productApiSlice;
 
 // this productApiSlice is injecting endpoint into the main apiSlice,

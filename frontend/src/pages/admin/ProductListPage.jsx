@@ -193,7 +193,7 @@ const ProductListPage = () => {
           </div>
         </div>
       )}
-      {!isLoading && <Paginate pages={data.pages} page={data.page} isAdmin />}
+      {!isLoading && <Paginate pages={data.pages} page={data.page} isAdmin category={'productlist'} />}
     </div>
   );
 };

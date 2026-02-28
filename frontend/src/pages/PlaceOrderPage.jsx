@@ -86,9 +86,11 @@ const PlaceOrderPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-2 lg:px-4 my-4">
+    // <div className="max-w-7xl mx-auto px-2 lg:px-4 my-4">
+    <div className="flex flex-col gap-y-4 max-w-7xl p-6 mx-auto">
       {/* Steps */}
-      <div className="mb-4">
+      {/* <div className="mb-4"> */}
+      <div className="w-full mb-3 mx-auto">
         <CheckoutSteps step1 step2 step3 step4 redirect={isBuyNow ? `/placeorder/${productId}?qty=${qty}` : "/placeorder"} />
       </div>
 
@@ -139,7 +141,7 @@ const PlaceOrderPage = () => {
             </h2>
 
             {loadingBuyNow ? (
-              <Loader />
+              <Loader className="mx-auto" />
             ) : errorBuyNow ? (
               <Message variant="danger">
                 {errorBuyNow?.data?.message || errorBuyNow.error}
@@ -156,7 +158,7 @@ const PlaceOrderPage = () => {
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-20 h-20 object-cover rounded-lg"
+                          className="w-20 h-20 rounded-lg"
                         />
                       </Link>
                     </div>
@@ -206,7 +208,7 @@ const PlaceOrderPage = () => {
             </h2>
 
             {loadingBuyNow ? (
-              <Loader />
+              <Loader className="mx-auto" />
             ) : (
               <>
                 <div className="space-y-4 text-slate-600">
@@ -253,7 +255,7 @@ const PlaceOrderPage = () => {
                 )}
 
                 {loadingCreateOrder ? (
-                  <Loader />
+                  <Loader className="mx-auto" />
                 ) : (
                   <button
                     className={`mt-6 w-full bg-techmart-color text-white py-3 rounded-lg font-semibold hover:bg-techmart-dark transition ${!cart.cartItems.length && !isBuyNow ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}

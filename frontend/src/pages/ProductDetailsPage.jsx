@@ -97,7 +97,7 @@ const ProductDetailsPage = () => {
 
         {isLoading ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <Loader />
+            <Loader className="mx-auto" />
           </div>
         ) : error ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -108,8 +108,8 @@ const ProductDetailsPage = () => {
         ) : (
           <>
             {/* Hero Product Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="max-w-7xl mx-auto px-3 lg:px-8 py-8 lg:py-12">
+              <div className="bg-white overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 p-6 lg:p-10">
                   {/* Image Gallery Style */}
                   <div className="space-y-4">
@@ -329,7 +329,7 @@ const ProductDetailsPage = () => {
 
                 {/* Review Form - Right Side (1 column) */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 sticky top-24">
+                  <div className="bg-white border border-gray-200 p-6 sticky top-24">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-10 h-10 rounded-full bg-techmart-color/10 flex items-center justify-center">
                         <svg
