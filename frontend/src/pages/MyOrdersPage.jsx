@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 // Custom Modules
 import { useProfileMutation } from "../slices/usersApiSlice";
@@ -25,7 +26,11 @@ const ProfilePage = () => {
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
 
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+  const {
+    data: orders,
+    isLoading: loadingOrders,
+    error: errorOrders,
+  } = useGetMyOrdersQuery();
 
   useEffect(() => {
     if (userInfo) {
@@ -58,27 +63,61 @@ const ProfilePage = () => {
   };
 
   return (
-    // <div className="bg-gray-20 py-10 px-4">
-      <div className="max-w-7xl py-10 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-2xl font-semibold">My Orders</h2>
+    // <div className="max-w-7xl py-10 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 border">
+    <div className="max-w-7xl mx-auto px-2">
+      <h2 className="max-w-4xl text-2xl font-bold my-3 mx-auto">My Orders</h2>
 
-          {isLoading ? (
-            <Loader className="mx-auto" />
-          ) : error ? (
-            <Message variant="danger">
-              {error?.data?.message || error.error}
-            </Message>
-          ) : orders?.length === 0 ? (
-            <Message>No orders found.</Message>
-          ) : (
-            orders.map((order) => (
+      {loadingOrders ? (
+        <Loader className="mx-auto" />
+      ) : errorOrders ? (
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
+      ) : orders?.length === 0 ? (
+        <Message>No orders found.</Message>
+      ) : (
+        <>
+          {/* ------------------------------------ MOBILE SCREEN SIZE ------------------------------------ */}
+          <div className="md:hidden">
+            {orders?.map((order) => (
+              <div className="mb-2 bg-white rounded-md border border-slate-300">
+                {order?.orderItems?.map((item) => (
+                  <Link
+                    key={item.product}
+                    to={`/order/${order._id}`}
+                    className="flex gap-3 p-2 border-b last:border-b-0 border-slate-300 items-center "
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-20 h-20 object-contain rounded"
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-techmart-darker text-sm font-semibold truncate">
+                        {item.name}
+                      </h2>
+
+                      <p className="text-sm text-gray-500">
+                        Ordered on {order.createdAt.substring(0, 10)}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* ------------------------------------ DESKTOP SCREEN SIZE ------------------------------------ */}
+          <div className="hidden md:flex md:flex-col md:gap-3 md:max-w-3xl lg:max-w-4xl mx-auto my-3">
+            {orders.map((order) => (
               <div
                 key={order._id}
-                className="bg-white rounded-lg shadow-sm overflow-hidden"
+                className="bg-white border border-slate-300 rounded-lg overflow-hidden"
               >
                 {/* ORDER HEADER */}
-                <div className="hidden lg:flex flex-col lg:flex-row lg:justify-between gap-4 p-4 border-b-2 border-gray-300">
+                {/* <div className="hidden lg:flex flex-col lg:flex-row lg:justify-between gap-4 p-4 border-b-2 border-gray-300"> */}
+                <div className="hidden md:flex flex-col md:flex-row md:justify-between gap-4 p-4 border-b-2 border-gray-300">
                   <div className="flex flex-wrap gap-6 text-sm">
                     <div>
                       <p className="text-gray-500">ORDER PLACED</p>
@@ -99,7 +138,6 @@ const ProfilePage = () => {
                       <p className="font-medium">{userInfo?.name}</p>
                     </div>
                   </div>
-
 
                   <div className="flex flex-col gap-1">
                     <p className="text-gray-500 text-sm">ORDER # {order._id}</p>
@@ -128,7 +166,8 @@ const ProfilePage = () => {
                 {order.orderItems.map((item) => (
                   <div
                     key={item.product}
-                    className="hidden lg:flex flex-col sm:flex-row gap-5 p-6 border-b last:border-b-0 border-gray-300"
+                    // className="hidden lg:flex flex-col sm:flex-row gap-5 p-6 border-b last:border-b-0 border-gray-300"
+                    className="hidden md:flex flex-col sm:flex-row gap-5 p-6 border-b last:border-b-0 border-gray-300"
                   >
                     <Link
                       to={`/products/${item.product}`}
@@ -150,48 +189,26 @@ const ProfilePage = () => {
                       </Link>
 
                       <div className="flex flex-wrap gap-3 mt-4">
-                        <Link to={`/placeorder?id=${item.product}&qty=${1}`} className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50 cursor-pointer">
+                        <Link
+                          to={`/placeorder/${item.product}?qty=${1}`}
+                          className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50 cursor-pointer"
+                        >
                           Buy Again
                         </Link>
 
-                        <button className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50">
+                        <HashLink to={`/products/${item.product}#review`} className="px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50">
                           Review
-                        </button>
-
+                        </HashLink>
                       </div>
                     </div>
                   </div>
                 ))}
-
-                {/* ORDER ITEMS (MOBILE) */}
-                {order.orderItems.map((item) => (
-                  <Link
-                    key={item.product}
-                    to={`/order/${order._id}`}
-                    className="lg:hidden flex gap-3 p-4 border-b last:border-b-0 items-center bg-white"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-20 h-20 object-contain rounded"
-                    />
-
-                    <div className="flex-1 min-w-0">
-                      <h2 className="text-techmart-darker font-medium truncate">
-                        {item.name}
-                      </h2>
-
-                      <p className="text-sm text-gray-500">
-                        Ordered on {order.createdAt.substring(0, 10)}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
               </div>
-            ))
-          )}
-        </div>
-      </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
     // </div>
   );
 };

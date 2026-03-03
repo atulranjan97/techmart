@@ -58,7 +58,7 @@ const ProductDetailsPage = () => {
   };
 
   const checkoutHandler = async () => {
-    navigate(`/login?redirect=/placeorder/${product._id}?qty=${qty}`)
+    navigate(`/login?redirect=/placeorder/${product._id}?qty=${qty}`);
   };
 
   const submitHandler = async (e) => {
@@ -108,8 +108,8 @@ const ProductDetailsPage = () => {
         ) : (
           <>
             {/* Hero Product Section */}
-            <div className="max-w-7xl mx-auto px-3 lg:px-8 py-8 lg:py-12">
-              <div className="bg-white overflow-hidden">
+            <div className="max-w-7xl mx-auto px-3 lg:px-8 py-8 lg:py-8">
+              <div className="bg-white overflow-hidden border border-slate-300">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 p-6 lg:p-10">
                   {/* Image Gallery Style */}
                   <div className="space-y-4">
@@ -178,7 +178,7 @@ const ProductDetailsPage = () => {
                     </div>
 
                     {/* Key Features */}
-                    <div className="grid grid-cols-2 gap-4 py-4">
+                    {/* <div className="grid grid-cols-2 gap-4 py-4">
                       {[
                         "Free Shipping",
                         "1 Year Warranty",
@@ -205,10 +205,10 @@ const ProductDetailsPage = () => {
                           {feature}
                         </div>
                       ))}
-                    </div>
+                    </div> */}
 
                     {/* Action Section */}
-                    <div className="bg-gray-50 p-6 rounded-xl space-y-4">
+                    <div className="bg-gray-100 p-6 rounded-xl space-y-4">
                       {product.countInStock > 0 && (
                         <div className="flex items-center gap-4">
                           <span className="font-medium text-gray-700">
@@ -265,7 +265,7 @@ const ProductDetailsPage = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Reviews List - Left Side (2 columns) */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-6 bg-white p-3 border border-slate-300">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-gray-900">
                       Customer Reviews
@@ -291,7 +291,7 @@ const ProductDetailsPage = () => {
                     {product.reviews.map((review) => (
                       <div
                         key={review._id}
-                        className="bg-white border border-gray-200 rounded-xl p-6 transition-shadow"
+                        className="bg-white border border-slate-300 rounded-xl p-6 transition-shadow"
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -328,8 +328,8 @@ const ProductDetailsPage = () => {
                 </div>
 
                 {/* Review Form - Right Side (1 column) */}
-                <div className="lg:col-span-1">
-                  <div className="bg-white border border-gray-200 p-6 sticky top-24">
+                <div className="lg:col-span-1" id="review">
+                  <div className="bg-white border border-slate-300 p-6 sticky top-24">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-10 h-10 rounded-full bg-techmart-color/10 flex items-center justify-center">
                         <svg

@@ -1,6 +1,8 @@
 // Local Modules
 import Product from "../models/productModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
+import Order from "../models/orderModel.js";
+import { Mongoose } from "mongoose";
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -114,10 +116,25 @@ const createProductReview = asyncHandler(async (req, res) => {
       (review) => review.user.toString() === req.user._id.toString(),
     );
 
+    // If product is already reviewed then review is not allowed
     if (alreadyReviewed) {
       res.status(400);
-      throw new Error("Products already reviewed");
+      throw new Error("Product already reviewed");
     }
+
+    // If user is an admin then review is not allowed
+    if (req.user.isAdmin) {
+      res.status(400);
+      throw new Error("Admin can't review the product");
+    }
+
+    // If user hasn't purchased the product then review is not allowed
+    const hasPurchased = await Order.exists({user:req.user._id, isPaid: true, 'orderItems.product': product._id});
+    console.log(hasPurchased)
+    if (!hasPurchased) {
+      res.status(403);  // 403(forbidden)- user is authenticated but not allowed
+      throw new Error("Purchase required to review this product")
+    } 
 
     const review = {
       user: req.user._id,

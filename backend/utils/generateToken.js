@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const generateToken = (res, userId) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '30d'});
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d'});
     // it takes in a few things and first is gonna be an object with a payload and what we send in a payload is the userId, the next thing we wanna pass in is a secret which we don't want the secret to be just put in this file, we want to put it in our environment variables, the last thing we want to pass in is a object (when do we want this token to expire)
     
     // Set JWT as HTTP-Only cookie

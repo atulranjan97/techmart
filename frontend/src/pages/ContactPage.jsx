@@ -20,7 +20,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
+    <div className="min-h-screen py-12 px-6">
       <div className="max-w-6xl mx-auto">
 
         {/* Page Heading */}
@@ -37,7 +37,7 @@ const ContactPage = () => {
         <div className="lg:w-xl mx-auto">
 
           {/* Contact Info */}
-          <div className="bg-white shadow-md rounded-xl p-8 space-y-6">
+          <div className="bg-white border border-slate-300 p-8 space-y-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Get in Touch
             </h2>

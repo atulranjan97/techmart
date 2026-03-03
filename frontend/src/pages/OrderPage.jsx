@@ -121,13 +121,13 @@ const OrderPage = () => {
   };
 
   return isLoading ? (
-    <Loader />
+    <Loader className="mx-auto" />
   ) : error ? (
     <Message variant="danger">{error?.data?.message || error.error}</Message>
   ) : (
-    <div className="max-w-6xl mx-auto space-y-3 lg:space-y-4 px-2 lg:px-5 py-2">
+    <div className="max-w-6xl mx-auto space-y-3 lg:space-y-4 px-2 lg:px-5 my-4">
       {/* Header */}
-      <div className="bg-white shadow rounded-lg p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-white border border-slate-300 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="">
           <h1 className="text-xl lg:text-2xl text-techmart-color font-bold">
             Order #{order._id}
@@ -152,11 +152,11 @@ const OrderPage = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid lg:grid-cols-3 gap-3">
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-3 lg:space-y-4">
           {/* Shipping Info */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white border border-slate-300 p-6">
             <h2 className="text-xl text-techmart-color font-bold border-b border-gray-300 pb-3">
               Shipping Information
             </h2>
@@ -186,7 +186,7 @@ const OrderPage = () => {
           </div>
 
           {/* Payment Info */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white p-6 border border-slate-300">
             <div className="flex items-center justify-between pb-3 border-b border-gray-300">
               <h2 className="text-xl text-techmart-color font-bold">
                 Payment Details
@@ -223,7 +223,7 @@ const OrderPage = () => {
           </div>
 
           {/* Items */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white p-6 border border-slate-300">
             <h2 className="text-xl text-techmart-color font-bold mb-4">
               Order Items
             </h2>
@@ -260,7 +260,7 @@ const OrderPage = () => {
         </div>
 
         {/* RIGHT — SUMMARY */}
-        <div className="bg-white shadow rounded-lg p-6 h-fit">
+        <div className="bg-white p-6 h-fit border border-slate-300">
           <h2 className="text-xl text-techmart-color font-bold border-b border-gray-300 pb-3 mb-4">
             Order Summary
           </h2>

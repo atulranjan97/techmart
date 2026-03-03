@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const reviewSchema = mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
     // it's also gonna have a user cause we need to know which user created it
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ const reviewSchema = mongoose.Schema({
     },
 }, { timestamps: true, })
 
-const productSchema = mongoose.Schema({
+const productSchema = new mongoose.Schema({
     // every product needs to be connected to user, there's a need to establish a relationship because we need to know which user(in this case it's gonna be a admin user) added that product
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: "User",},
     name: {type: String, required: true,},
